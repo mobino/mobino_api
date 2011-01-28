@@ -168,3 +168,31 @@ pass the parameters in random order - the signatures will be created correctly.
 Callback URL
 ------------
 
+You provide us with a callback URL in the admin interface and we will call you
+on the end of a transaction with the following information:
+
++status+:: The status of the transaction. One of 'authorized' or
+'unauthorized'. If you receive 'authorized', the transaction was completed
+successfully, and you will be credited the amount. If the transaction is
+unauthorized, then the customer didn't approve the transaction.
++amount+:: The amount of the transaction (formatted with two decimal digits)
++reference_number+:: The reference number you passed in when you generated the
+request for a transaction
++api_key+:: your API Key
++signature+:: The signature for the above parameters
+
+At the moment, the parameters are returned url-encoded. In the future, you will
+be able to select either JSON or URL encoding.
+
+
+Writing your own widget
+-----------------------
+
+It is of course possible to work without the mobino widget. You will need to
+call our API directly.
+
+Documatation to follow.
+* Calling the transaction API
+* Monitoring the status of a transaction
+
+
