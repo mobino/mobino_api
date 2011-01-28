@@ -1,0 +1,170 @@
+Mobino API Documentation
+========================
+
+What is Mobino
+--------------
+
+How do I get payed with Mobino
+------------------------------
+
+
+The API
+-------
+
+Mobino uses a simple REST based JSON API. All requests and responses are
+transfered in JSON format over HTTP.
+
+Preparations
+~~~~~~~~~~~~
+
+Before you can start to use the Mobino API you will need to setup API keys and
+secrets. These are generated automatically for you, when your merchant account
+is created. You can change them anytime by going to your profile page, and
+clicking "Create API credentials" in the Edit form of your profile.
+
+CAUTION: As soon as you change the credentials, any applications you have that use
+the old pair of credentials will stop working.
+
+In addition, you will need to provide a callback URL that we call upon a
+successful transaction. Details to be found in the section 'Callback URL'.
+
+API Credentials
+^^^^^^^^^^^^^^^
+
+The +API Key+ is used to identify you to the Mobino payment application. The
++API Secret+ is used to sign your calls to us. While the key is public and
+transmitted in the clear, the secret is never published and you should keep it
+guarded.
+
+Using the Mobino Widget
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The simplest way to use Mobino, is by using the provided Mobino Widget.
+
+Mobino provides you with a JavaScript widget that you can embedd on the page
+where a sale is being made. Here's the code you need to put where you want the
+widget to appear:
+
+.Sample invocation of Mobino Widget
+----
+<div id="mobino">
+  <script src="http://mobino.com/api/mobino.js"></script>
+  <script>MobinoLoader.load();MobinoLoader.config({'env':'production'});</script>
+  <script>MobinoLoader.createPayment({'amount':'10.00', 'merchant_id': 99,
+  'api_key':'YOUR_API_KEY', 'reference_number': '70824', 'signature':
+  'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});</script>
+</div>
+----
+
+The parameters are as follows:
+
+[horizontal]
++env+:: Select the environment where you want to create the payment.
+'production' is the productive environment. A sandbox environment will be ready
+soon.
++amount+:: The amount to charge in Euro and Cents, formatted as a string.
+Separator of Euros and Cents is a +.+ (dot), not a comma. No other formatting
+is allowed (thousand separators etc.)
++merchant_id+:: Your merchant id. Will be provided to you by us.
++api_key+:: The API key found discussed above.
++reference_number+:: An 'optional' reference number that you can use to track
+the payment. We will provide you this reference number in the callback we do on
+a successful transaction.
++transaction_type+:: Either +regular+ or +gift+. A regular transaction is one,
+where you bill your customer and get paid. A gift transaction is one, where you
+provide some (virtual) gift to the customer (no money is being transfered)
++signature+:: A signature of the parameters. See section on 'Signature'
+
+
+Signature
+~~~~~~~~~
+
+In order to protect the integrity of your call to Mobino, you will need to
+provide a computed signature. This signature is generated using a one way Hash
+function using the parameters you provide and the 'API Secret' we provide to
+you.
+
+Basically, you will need to sort the parameters, convert them into a string,
+append your secret and then run the Hash function on it.
+
+We have code in some languages and will expand this as time goes by. Check out
+the different subfolders to see how the parameters are handled.
+
+Here's a step by step walk through:
+
+.Original parameters
+----
+{'amount':'10.0', 
+ 'reference_number': '70824', 
+ 'merchant_id': 99,
+ 'transaction_type': 'regular',
+ 'api_key':'YOUR_API_KEY'} 
+----
+
+.Normalize the parameters
+
+----
+{'amount':'10.00', 
+ 'reference_number': '70824', 
+ 'merchant_id': 99,
+ 'transaction_type': 'regular',
+ 'api_key':'YOUR_API_KEY'} 
+----
+
+Normalization formats the amount with the following pattern: 
+
+----
+sprintf "%.2f", params['amount']
+----
+
+which formats it with two decimal digits.
+
+.Sort parameters
+----
+{'amount':'10.00', 
+ 'api_key':'YOUR_API_KEY',
+ 'merchant_id': 99,
+ 'reference_number': '70824', 
+ 'transaction_type': 'regular'}
+----
+
+.Stringify them
+----
+'amount:10.00,api_key:YOUR_API_KEY,merchant_id:99,reference_number:70824,transaction_type:regular'
+----
+
+All the parameters are stored in one string. Key / Value are separated with a
++:+ and the pairs are separated with commas.
+
+.Prepare for signature creation
+----
+'amount:10.00,api_key:YOUR_API_KEY,merchant_id:99,reference_number:70824,transaction_type:regularAPI_SECRET'
+----
+
+The 'API Secret' is appended to the string. 
+
+.Generate signature
+-----
+Digest::MD5.hexdigest('amount:10.00,api_key:YOUR_API_KEY,merchant_id:99,reference_number:70824,transaction_type:regularAPI_SECRET')
+=> "2ca37559b8cc7a1ae3b6089c59a4d97a"
+-----
+
+This signature is then appended to the paramters:
+
+----
+{'amount':'10.00', 
+ 'api_key':'YOUR_API_KEY',
+ 'merchant_id': 99,
+ 'reference_number': '70824', 
+ 'transaction_type': 'regular',
+ 'signature' : '2ca37559b8cc7a1ae3b6089c59a4d97a'}
+----
+
+NOTE: On the receiving side, the procedure is repeated (especially the sorting
+of the paramters and the formatting of the amount paramter). Therefore you can
+pass the parameters in random order - the signatures will be created correctly.
+
+
+Callback URL
+------------
+
