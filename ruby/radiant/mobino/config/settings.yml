@@ -1,0 +1,17 @@
+defaults: &defaults
+  :staging:
+    :api_key: 'YOUR_API_KEY'
+    :api_secret: 'YOUR_API_SECRET'
+  :production:
+    :api_key:  'YOUR_API_KEY'
+    :api_secret: 'YOUR_API_SECRET'
+    
+:development:
+  <<: *defaults
+
+:test:
+  <<: *defaults
+
+:production:
+  <<: *defaults
+
