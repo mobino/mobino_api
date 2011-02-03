@@ -427,10 +427,8 @@ widget to appear:</p></div>
 <div class="content">
 <pre><tt>&lt;div id="mobino"&gt;
   &lt;script src="http://mobino.com/api/mobino.js"&gt;&lt;/script&gt;
-  &lt;script&gt;MobinoLoader.load();MobinoLoader.config({'env':'production'});&lt;/script&gt;
-  &lt;script&gt;MobinoLoader.createPayment({'amount':'10.00', 'merchant_id': 99,
-  'api_key':'YOUR_API_KEY', 'reference_number': '70824', 'signature':
-  'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});&lt;/script&gt;
+  &lt;script&gt;MobinoLoader.load();MobinoLoader.config({'env':'production', 'transaction_type': 'regular'});&lt;/script&gt;
+  &lt;script&gt;MobinoLoader.createPayment({'amount':'10.00', 'merchant_id': 99,'api_key':'YOUR_API_KEY', 'reference_number': '70824', 'signature': 'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});&lt;/script&gt;
 &lt;/div&gt;</tt></pre>
 </div></div>
 <div class="paragraph"><p>The parameters are as follows:</p></div>
@@ -534,20 +532,12 @@ the different subfolders to see how the parameters are handled.</p></div>
 <div class="listingblock">
 <div class="title">Original parameters</div>
 <div class="content">
-<pre><tt>{'amount':'10.0',
- 'reference_number': '70824',
- 'merchant_id': 99,
- 'transaction_type': 'regular',
- 'api_key':'YOUR_API_KEY'}</tt></pre>
+<pre><tt>{'amount':'10.0', 'reference_number': '70824', 'merchant_id': 99, 'transaction_type': 'regular', 'api_key':'YOUR_API_KEY'}</tt></pre>
 </div></div>
 <div class="listingblock">
 <div class="title">Normalize the parameters</div>
 <div class="content">
-<pre><tt>{'amount':'10.00',
- 'reference_number': '70824',
- 'merchant_id': 99,
- 'transaction_type': 'regular',
- 'api_key':'YOUR_API_KEY'}</tt></pre>
+<pre><tt>{'amount':'10.00', 'reference_number': '70824', 'merchant_id': 99,'transaction_type': 'regular', 'api_key':'YOUR_API_KEY'}</tt></pre>
 </div></div>
 <div class="paragraph"><p>Normalization formats the amount with the following pattern:</p></div>
 <div class="listingblock">
@@ -558,11 +548,7 @@ the different subfolders to see how the parameters are handled.</p></div>
 <div class="listingblock">
 <div class="title">Sort parameters</div>
 <div class="content">
-<pre><tt>{'amount':'10.00',
- 'api_key':'YOUR_API_KEY',
- 'merchant_id': 99,
- 'reference_number': '70824',
- 'transaction_type': 'regular'}</tt></pre>
+<pre><tt>{'amount':'10.00', 'api_key':'YOUR_API_KEY', 'merchant_id': 99, 'reference_number': '70824',  'transaction_type': 'regular'}</tt></pre>
 </div></div>
 <div class="listingblock">
 <div class="title">Stringify them</div>
@@ -586,12 +572,7 @@ the different subfolders to see how the parameters are handled.</p></div>
 <div class="paragraph"><p>This signature is then appended to the paramters:</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>{'amount':'10.00',
- 'api_key':'YOUR_API_KEY',
- 'merchant_id': 99,
- 'reference_number': '70824',
- 'transaction_type': 'regular',
- 'signature' : '2ca37559b8cc7a1ae3b6089c59a4d97a'}</tt></pre>
+<pre><tt>{'amount':'10.00', 'api_key':'YOUR_API_KEY', 'merchant_id': 99, 'reference_number': '70824',  'transaction_type': 'regular', 'signature' : '2ca37559b8cc7a1ae3b6089c59a4d97a'}</tt></pre>
 </div></div>
 <div class="admonitionblock">
 <table><tr>
@@ -667,7 +648,7 @@ call our API directly.</p></div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2011-01-28 15:40:03 CEST
+Last updated 2011-02-03 12:13:42 CEST
 </div>
 </div>
 </body>
