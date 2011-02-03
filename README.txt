@@ -49,10 +49,8 @@ widget to appear:
 ----
 <div id="mobino">
   <script src="http://mobino.com/api/mobino.js"></script>
-  <script>MobinoLoader.load();MobinoLoader.config({'env':'production'});</script>
-  <script>MobinoLoader.createPayment({'amount':'10.00', 'merchant_id': 99,
-  'api_key':'YOUR_API_KEY', 'reference_number': '70824', 'signature':
-  'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});</script>
+  <script>MobinoLoader.load();MobinoLoader.config({'env':'production', 'transaction_type': 'regular'});</script>
+  <script>MobinoLoader.createPayment({'amount':'10.00', 'merchant_id': 99,'api_key':'YOUR_API_KEY', 'reference_number': '70824', 'signature': 'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});</script>
 </div>
 ----
 
@@ -94,21 +92,13 @@ Here's a step by step walk through:
 
 .Original parameters
 ----
-{'amount':'10.0', 
- 'reference_number': '70824', 
- 'merchant_id': 99,
- 'transaction_type': 'regular',
- 'api_key':'YOUR_API_KEY'} 
+{'amount':'10.0', 'reference_number': '70824', 'merchant_id': 99, 'transaction_type': 'regular', 'api_key':'YOUR_API_KEY'} 
 ----
 
 .Normalize the parameters
 
 ----
-{'amount':'10.00', 
- 'reference_number': '70824', 
- 'merchant_id': 99,
- 'transaction_type': 'regular',
- 'api_key':'YOUR_API_KEY'} 
+{'amount':'10.00', 'reference_number': '70824', 'merchant_id': 99,'transaction_type': 'regular', 'api_key':'YOUR_API_KEY'} 
 ----
 
 Normalization formats the amount with the following pattern: 
@@ -121,11 +111,7 @@ which formats it with two decimal digits.
 
 .Sort parameters
 ----
-{'amount':'10.00', 
- 'api_key':'YOUR_API_KEY',
- 'merchant_id': 99,
- 'reference_number': '70824', 
- 'transaction_type': 'regular'}
+{'amount':'10.00', 'api_key':'YOUR_API_KEY', 'merchant_id': 99, 'reference_number': '70824',  'transaction_type': 'regular'}
 ----
 
 .Stringify them
@@ -152,12 +138,7 @@ Digest::MD5.hexdigest('amount:10.00,api_key:YOUR_API_KEY,merchant_id:99,referenc
 This signature is then appended to the paramters:
 
 ----
-{'amount':'10.00', 
- 'api_key':'YOUR_API_KEY',
- 'merchant_id': 99,
- 'reference_number': '70824', 
- 'transaction_type': 'regular',
- 'signature' : '2ca37559b8cc7a1ae3b6089c59a4d97a'}
+{'amount':'10.00', 'api_key':'YOUR_API_KEY', 'merchant_id': 99, 'reference_number': '70824',  'transaction_type': 'regular', 'signature' : '2ca37559b8cc7a1ae3b6089c59a4d97a'}
 ----
 
 NOTE: On the receiving side, the procedure is repeated (especially the sorting
