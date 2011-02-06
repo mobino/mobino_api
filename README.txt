@@ -18,8 +18,8 @@ Preparations
 ~~~~~~~~~~~~
 
 Before you can start to use the Mobino API you will need to setup API keys and
-secrets. These are generated automatically for you, when your merchant account
-is created. You can change them anytime by going to your profile page, and
+secrets. These are generated automatically for you when your merchant account
+is created. You can change them anytime by going to your profile page and
 clicking "Create API credentials" in the Edit form of your profile.
 
 CAUTION: As soon as you change the credentials, any applications you have that use
@@ -39,7 +39,7 @@ guarded.
 Using the Mobino Widget
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-The simplest way to use Mobino, is by using the provided Mobino Widget.
+The simplest way to use Mobino is by using the provided Mobino Widget.
 
 Mobino provides you with a JavaScript widget that you can embed on the page
 where a sale is being made. Here's the code you need to put where you want the
@@ -50,7 +50,7 @@ widget to appear:
 <div id="mobino">
   <script src="http://mobino.com/api/mobino.js"></script>
   <script>MobinoLoader.load();MobinoLoader.config({'env':'production', 'transaction_type': 'regular'});</script>
-  <script>MobinoLoader.createPayment({'amount':'10.00', 'merchant_id': 99,'api_key':'YOUR_API_KEY', 'reference_number': '70824', 'signature': 'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});</script>
+  <script>MobinoLoader.createPayment({'amount': '10.00', 'merchant_id': 99, 'api_key': 'YOUR_API_KEY', 'reference_number': '70824', 'signature': 'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});</script>
 </div>
 ----
 
@@ -138,7 +138,7 @@ Digest::MD5.hexdigest('amount:10.00,api_key:YOUR_API_KEY,merchant_id:99,referenc
 This signature is then appended to the paramters:
 
 ----
-{'amount':'10.00', 'api_key':'YOUR_API_KEY', 'merchant_id': 99, 'reference_number': '70824',  'transaction_type': 'regular', 'signature' : '2ca37559b8cc7a1ae3b6089c59a4d97a'}
+{'amount': '10.00', 'api_key': 'YOUR_API_KEY', 'merchant_id': 99, 'reference_number': '70824',  'transaction_type': 'regular', 'signature' : '2ca37559b8cc7a1ae3b6089c59a4d97a'}
 ----
 
 NOTE: On the receiving side, the procedure is repeated (especially the sorting
