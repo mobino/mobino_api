@@ -389,7 +389,7 @@ div#toc a:visited { color: blue; }
 <h2 id="_what_is_mobino">What is Mobino</h2>
 <div class="sectionbody">
 </div>
-<h2 id="_how_do_i_get_payed_with_mobino">How do I get payed with Mobino</h2>
+<h2 id="_how_do_i_get_paid_with_mobino">How do I get paid with Mobino</h2>
 <div class="sectionbody">
 </div>
 <h2 id="_the_api">The API</h2>
@@ -419,7 +419,7 @@ transmitted in the clear, the secret is never published and you should keep it
 guarded.</p></div>
 <h3 id="_using_the_mobino_widget">Using the Mobino Widget</h3><div style="clear:left"></div>
 <div class="paragraph"><p>The simplest way to use Mobino, is by using the provided Mobino Widget.</p></div>
-<div class="paragraph"><p>Mobino provides you with a JavaScript widget that you can embedd on the page
+<div class="paragraph"><p>Mobino provides you with a JavaScript widget that you can embed on the page
 where a sale is being made. Here&#8217;s the code you need to put where you want the
 widget to appear:</p></div>
 <div class="listingblock">
@@ -428,7 +428,7 @@ widget to appear:</p></div>
 <pre><tt>&lt;div id="mobino"&gt;
   &lt;script src="http://mobino.com/api/mobino.js"&gt;&lt;/script&gt;
   &lt;script&gt;MobinoLoader.load();MobinoLoader.config({'env':'production', 'transaction_type': 'regular'});&lt;/script&gt;
-  &lt;script&gt;MobinoLoader.createPayment({'amount':'10.00', 'merchant_id': 99,'api_key':'YOUR_API_KEY', 'reference_number': '70824', 'signature': 'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});&lt;/script&gt;
+  &lt;script&gt;MobinoLoader.createPayment({'amount':'10.00', 'merchant_id': 99, 'api_key': 'YOUR_API_KEY', 'reference_number': '70824', 'signature': 'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});&lt;/script&gt;
 &lt;/div&gt;</tt></pre>
 </div></div>
 <div class="paragraph"><p>The parameters are as follows:</p></div>
@@ -501,8 +501,8 @@ a successful transaction.
 </td>
 <td class="hdlist2">
 <p style="margin-top: 0;">
-Either <tt>regular</tt> or <tt>gift</tt>. A regular transaction is one,
-where you bill your customer and get paid. A gift transaction is one, where you
+Either <tt>regular</tt> or <tt>gift</tt>. A regular transaction is one
+where you bill your customer and get paid. A gift transaction is one where you
 provide some (virtual) gift to the customer (no money is being transfered)
 </p>
 </td>
@@ -532,12 +532,12 @@ the different subfolders to see how the parameters are handled.</p></div>
 <div class="listingblock">
 <div class="title">Original parameters</div>
 <div class="content">
-<pre><tt>{'amount':'10.0', 'reference_number': '70824', 'merchant_id': 99, 'transaction_type': 'regular', 'api_key':'YOUR_API_KEY'}</tt></pre>
+<pre><tt>{'amount': '10.0', 'reference_number': '70824', 'merchant_id': 99, 'transaction_type': 'regular', 'api_key': 'YOUR_API_KEY'}</tt></pre>
 </div></div>
 <div class="listingblock">
 <div class="title">Normalize the parameters</div>
 <div class="content">
-<pre><tt>{'amount':'10.00', 'reference_number': '70824', 'merchant_id': 99,'transaction_type': 'regular', 'api_key':'YOUR_API_KEY'}</tt></pre>
+<pre><tt>{'amount': '10.00', 'reference_number': '70824', 'merchant_id': 99, 'transaction_type': 'regular', 'api_key': 'YOUR_API_KEY'}</tt></pre>
 </div></div>
 <div class="paragraph"><p>Normalization formats the amount with the following pattern:</p></div>
 <div class="listingblock">
@@ -548,7 +548,7 @@ the different subfolders to see how the parameters are handled.</p></div>
 <div class="listingblock">
 <div class="title">Sort parameters</div>
 <div class="content">
-<pre><tt>{'amount':'10.00', 'api_key':'YOUR_API_KEY', 'merchant_id': 99, 'reference_number': '70824',  'transaction_type': 'regular'}</tt></pre>
+<pre><tt>{'amount': '10.00', 'api_key': 'YOUR_API_KEY', 'merchant_id': 99, 'reference_number': '70824', 'transaction_type': 'regular'}</tt></pre>
 </div></div>
 <div class="listingblock">
 <div class="title">Stringify them</div>
@@ -569,10 +569,10 @@ the different subfolders to see how the parameters are handled.</p></div>
 <pre><tt>Digest::MD5.hexdigest('amount:10.00,api_key:YOUR_API_KEY,merchant_id:99,reference_number:70824,transaction_type:regularAPI_SECRET')
 =&gt; "2ca37559b8cc7a1ae3b6089c59a4d97a"</tt></pre>
 </div></div>
-<div class="paragraph"><p>This signature is then appended to the paramters:</p></div>
+<div class="paragraph"><p>This signature is then appended to the parameters:</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>{'amount':'10.00', 'api_key':'YOUR_API_KEY', 'merchant_id': 99, 'reference_number': '70824',  'transaction_type': 'regular', 'signature' : '2ca37559b8cc7a1ae3b6089c59a4d97a'}</tt></pre>
+<pre><tt>{'amount':'10.00', 'api_key':'YOUR_API_KEY', 'merchant_id': 99, 'reference_number': '70824', 'transaction_type': 'regular', 'signature' : '2ca37559b8cc7a1ae3b6089c59a4d97a'}</tt></pre>
 </div></div>
 <div class="admonitionblock">
 <table><tr>
@@ -580,15 +580,14 @@ the different subfolders to see how the parameters are handled.</p></div>
 <div class="title">Note</div>
 </td>
 <td class="content">On the receiving side, the procedure is repeated (especially the sorting
-of the paramters and the formatting of the amount paramter). Therefore you can
+of the paramters and the formatting of the amount parameter). Therefore you can
 pass the parameters in random order - the signatures will be created correctly.</td>
 </tr></table>
 </div>
 </div>
 <h2 id="_callback_url">Callback URL</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>You provide us with a callback URL in the admin interface and we will call you
-on the end of a transaction with the following information:</p></div>
+<div class="paragraph"><p>You provide us with a callback URL in the admin interface and we will call you at the end of a transaction with the following information:</p></div>
 <div class="dlist"><dl>
 <dt class="hdlist1">
 <tt>status</tt>
@@ -614,8 +613,7 @@ The amount of the transaction (formatted with two decimal digits)
 </dt>
 <dd>
 <p>
-The reference number you passed in when you generated the
-request for a transaction
+The reference number you passed in when you generated the request for a transaction
 </p>
 </dd>
 <dt class="hdlist1">
@@ -642,7 +640,7 @@ be able to select either JSON or URL encoding.</p></div>
 <div class="sectionbody">
 <div class="paragraph"><p>It is of course possible to work without the mobino widget. You will need to
 call our API directly.</p></div>
-<div class="paragraph"><p>Documatation to follow.
+<div class="paragraph"><p>Documentation to follow.
 * Calling the transaction API
 * Monitoring the status of a transaction</p></div>
 </div>

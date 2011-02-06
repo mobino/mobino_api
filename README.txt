@@ -4,7 +4,7 @@ Mobino API Documentation
 What is Mobino
 --------------
 
-How do I get payed with Mobino
+How do I get paid with Mobino
 ------------------------------
 
 
@@ -41,7 +41,7 @@ Using the Mobino Widget
 
 The simplest way to use Mobino, is by using the provided Mobino Widget.
 
-Mobino provides you with a JavaScript widget that you can embedd on the page
+Mobino provides you with a JavaScript widget that you can embed on the page
 where a sale is being made. Here's the code you need to put where you want the
 widget to appear:
 
@@ -69,7 +69,7 @@ is allowed (thousand separators etc.)
 the payment. We will provide you this reference number in the callback we do on
 a successful transaction.
 +transaction_type+:: Either +regular+ or +gift+. A regular transaction is one,
-where you bill your customer and get paid. A gift transaction is one, where you
+where you bill your customer and get paid. A gift transaction is one where you
 provide some (virtual) gift to the customer (no money is being transfered)
 +signature+:: A signature of the parameters. See section on 'Signature'
 
@@ -98,7 +98,7 @@ Here's a step by step walk through:
 .Normalize the parameters
 
 ----
-{'amount':'10.00', 'reference_number': '70824', 'merchant_id': 99,'transaction_type': 'regular', 'api_key':'YOUR_API_KEY'} 
+{'amount':'10.00', 'reference_number': '70824', 'merchant_id': 99, 'transaction_type': 'regular', 'api_key':'YOUR_API_KEY'} 
 ----
 
 Normalization formats the amount with the following pattern: 
@@ -111,7 +111,7 @@ which formats it with two decimal digits.
 
 .Sort parameters
 ----
-{'amount':'10.00', 'api_key':'YOUR_API_KEY', 'merchant_id': 99, 'reference_number': '70824',  'transaction_type': 'regular'}
+{'amount': '10.00', 'api_key': 'YOUR_API_KEY', 'merchant_id': 99, 'reference_number': '70824', 'transaction_type': 'regular'}
 ----
 
 .Stringify them
@@ -142,7 +142,7 @@ This signature is then appended to the paramters:
 ----
 
 NOTE: On the receiving side, the procedure is repeated (especially the sorting
-of the paramters and the formatting of the amount paramter). Therefore you can
+of the paramters and the formatting of the amount parameter). Therefore you can
 pass the parameters in random order - the signatures will be created correctly.
 
 
@@ -172,7 +172,7 @@ Writing your own widget
 It is of course possible to work without the mobino widget. You will need to
 call our API directly.
 
-Documatation to follow.
+Documentation to follow.
 * Calling the transaction API
 * Monitoring the status of a transaction
 
