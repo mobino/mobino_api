@@ -5,7 +5,7 @@ What is Mobino
 --------------
 
 How do I get paid with Mobino
-------------------------------
+-----------------------------
 
 
 The API
