@@ -23,7 +23,7 @@ class Mobino {
 	 * @param string $env Should be "production" or "staging"
 	 * @return bool
 	 */
-	public function __construct($amount, $reference_number='', $transaction_type='regular', $env='production', $lang = 'en', $country = ''){
+	public function __construct($amount, $reference_number='', $transaction_type='regular', $env='production', $lang='en', $country='') {
 	
 		//read config file
 		if(!$this->readConfig()){return false;}
@@ -63,6 +63,9 @@ class Mobino {
 			}//if
 			
 		}//if
+		
+		echo "Settings-File not found. Have you copied it over from settings_sample.ini to settings.ini?";
+		exit(1);
 		
 		return false;
 	}//function
@@ -133,8 +136,7 @@ class Mobino {
 			."<script>\n"
 				.'MobinoLoader.initializer({"env":"'.$this->params['env'].'", "lang": "'.$this->params['lang'].'"'.($this->params['country'] == ""? '' : ' ,"country":"'.$this->params['country'].'"').'});'."\n"
 				.'MobinoLoader.createPayment({"amount": "'.$this->params['amount'].'", "merchant_id": '.$this->configData[$this->params['env']]['merchant_id'].', "api_key": "'.$this->configData[$this->params['env']]['api_key'].'", "reference_number": "'.$this->params['reference_number'].'", "signature": "'.$this->getSignature().'", "transaction_type": "'.$this->params['transaction_type'].'"});'."\n"
-			."</script>\n"
-		."</div>\n";
+			."</script>\n</div>\n";
 	}
 
 	
