@@ -55,6 +55,15 @@ widget to appear:
 </div>
 ----
 
+.Sample of a minimalistic invocation of Mobino Widget
+----
+<div id="mobino">
+  <script src="http://mobino.com/api/mobino.js"></script>
+  <script>
+    MobinoLoader.createPayment({'amount':'10.00', 'merchant_id': 99, 'api_key': 'YOUR_API_KEY', 'reference_number': '70824', 'signature': 'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});</script>
+</div>
+----
+
 The parameters are as follows:
 
 [horizontal]
