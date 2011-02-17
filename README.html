@@ -427,8 +427,10 @@ widget to appear:</p></div>
 <div class="content">
 <pre><tt>&lt;div id="mobino"&gt;
   &lt;script src="http://mobino.com/api/mobino.js"&gt;&lt;/script&gt;
-  &lt;script&gt;MobinoLoader.load();MobinoLoader.config({'env':'production', 'transaction_type': 'regular'});&lt;/script&gt;
-  &lt;script&gt;MobinoLoader.createPayment({'amount':'10.00', 'merchant_id': 99, 'api_key': 'YOUR_API_KEY', 'reference_number': '70824', 'signature': 'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});&lt;/script&gt;
+  &lt;script&gt;
+    MobinoLoader.initializer({'env':'production', 'lang': 'fr', 'coutry': 'FR'});
+    MobinoLoader.createPayment({'amount':'10.00', 'merchant_id': 99, 'api_key': 'YOUR_API_KEY', 'reference_number': '70824', 'signature': 'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});
+  &lt;/script&gt;
 &lt;/div&gt;</tt></pre>
 </div></div>
 <div class="paragraph"><p>The parameters are as follows:</p></div>
@@ -440,9 +442,39 @@ widget to appear:</p></div>
 </td>
 <td class="hdlist2">
 <p style="margin-top: 0;">
-Select the environment where you want to create the payment.
-<em>production</em> is the productive environment. A sandbox environment will be ready
-soon.
+Optional Parameter: Select the environment where you want to create the payment.
+<br><em>production</em> is the default environment.
+<br><em>staging</em> is a sandbox environment, which will be ready soon.
+</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<tt>lang</tt>
+<br />
+</td>
+<td class="hdlist2">
+<p style="margin-top: 0;">
+Optional Parameter: Select the language of the widget.
+<br><em>en</em> selects English, the default.
+<br><em>fr</em> selects French.
+<br><em>de</em> selects German.
+</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<tt>country</tt>
+<br />
+</td>
+<td class="hdlist2">
+<p style="margin-top: 0;">
+Optional Parameter: Overrides the country-detection, based on GeoIP. The Country code has to be in capitals.
+Currently supported:
+<br><em>UK</em> selects Great Britain, the default.
+<br><em>CH</em> selects Switzerland.
+<br><em>FR</em> selects France.
+<br><em>DE</em> selects Germany.
 </p>
 </td>
 </tr>

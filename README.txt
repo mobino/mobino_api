@@ -49,18 +49,29 @@ widget to appear:
 ----
 <div id="mobino">
   <script src="http://mobino.com/api/mobino.js"></script>
-  <script>MobinoLoader.load();MobinoLoader.config({'env':'production', 'transaction_type': 'regular'});</script>
-  <script>MobinoLoader.createPayment({'amount': '10.00', 'merchant_id': 99, 'api_key': 'YOUR_API_KEY', 'reference_number': '70824', 'signature': 'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});</script>
+  <script>
+    MobinoLoader.initializer({'env':'production', 'lang': 'fr', 'coutry': 'FR'});
+    MobinoLoader.createPayment({'amount':'10.00', 'merchant_id': 99, 'api_key': 'YOUR_API_KEY', 'reference_number': '70824', 'signature': 'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});</script>
 </div>
 ----
 
 The parameters are as follows:
 
 [horizontal]
-+env+:: Select the environment where you want to create the payment.
-'production' is the productive environment. A sandbox environment will be ready
-soon.
-+amount+:: The amount to charge in Euro and Cents, formatted as a string.
++env+:: Optional Parameter: Select the environment where you want to create the payment.
+'production' is the default environment. 
+'staging' is a sandbox environment, which will be ready soon. 
++lang+:: Optional Parameter: Select the language of the widget. 
+'en' selects English, the default.
+'fr' selects French.
+'de' selects German.
++country+:: Optional Parameter: Overrides the country-detection, based on GeoIP. 
+The Country code has to be in capitals. Currently supported:
+'UK' selects Great Britain, the default.
+'CH' selects Switzerland.
+'FR' selects France.
+'DE' selects Germany. 
++amount+:: The amount to charge in Euro's and Cent's, formatted as a string.
 Separator of Euros and Cents is a +.+ (dot), not a comma. No other formatting
 is allowed (thousand separators etc.)
 +merchant_id+:: Your merchant id. Will be provided to you by us.
