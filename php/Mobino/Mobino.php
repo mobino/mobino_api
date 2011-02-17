@@ -132,7 +132,7 @@ class Mobino {
 		return "<div id='mobino'>\n<script src='http://mobino.com/api/mobino.js'></script>\n"
 			."<script>\n"
 				.'MobinoLoader.initializer({"env":"'.$this->params['env'].'", "lang": "'.$this->params['lang'].'"'.($this->params['country'] == ""? '' : ' ,"country":"'.$this->params['country'].'"').'});'."\n"
-				.'MobinoLoader.createPayment({"amount": "'.$this->params['amount'].'", "merchant_id": '.$this->configData[$this->params['env']]['merchant_id'].', "api_key": "'.$this->configData[$this->params['env']]['api_key'].'", "reference_number": "'.$this->params['reference_number'].'", "signature": "'.$this->getSignature().'", "transaction_type": "'.$this->params['transaction_type'].'"});."\n"
+				.'MobinoLoader.createPayment({"amount": "'.$this->params['amount'].'", "merchant_id": '.$this->configData[$this->params['env']]['merchant_id'].', "api_key": "'.$this->configData[$this->params['env']]['api_key'].'", "reference_number": "'.$this->params['reference_number'].'", "signature": "'.$this->getSignature().'", "transaction_type": "'.$this->params['transaction_type'].'"});'."\n"
 			."</script>\n"
 		."</div>\n";
 	}
