@@ -21,7 +21,10 @@ It can be used as follows in a Radiant page part:
 ----
 <div id="mobino">
   <script src="http://mobino.com/api/mobino.js"></script>
-  <script>MobinoLoader.createPayment(<r:mobino amount="10.00" merchant_id="5" reference_number="12345" />);</script>
+  <script>
+    MobinoLoader.initializer({'env':'production', 'lang': 'fr', 'coutry': 'FR'});
+    MobinoLoader.createPayment(<r:mobino amount="10.00" merchant_id="5" reference_number="12345" env="production" />);
+  </script>
 </div>
 ----
 
@@ -31,7 +34,9 @@ The following attributes can be passed to the mobino tag:
 
 +amount+:: The amount of the transaction
 +reference_number+:: Your reference number for this transaction
-+transaction_type+:: Either a +regular+ or a +gift+ transaction (see main
-Readme for difference)
++env+:: The environment against which the transaction should be executed.
+Currently available: +production+ and +staging+
+You must use the same setting at the JavaScript and the Tag.
++transaction_type+:: Either a +regular+ or a +gift+ transaction (see main Readme for difference)
 
 

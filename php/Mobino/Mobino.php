@@ -23,7 +23,7 @@ class Mobino {
 	 * @param string $env Should be "production" or "staging"
 	 * @return bool
 	 */
-	public function __construct($amount, $reference_number='', $transaction_type='regular', $env='production', $lang='en', $country='') {
+	public function __construct($amount, $reference_number, $transaction_type='regular', $env='production', $lang='en', $country='') {
 	
 		//read config file
 		if(!$this->readConfig()){return false;}

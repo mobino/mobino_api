@@ -45,7 +45,16 @@ Mobino provides you with a JavaScript widget that you can embed on the page
 where a sale is being made. Here's the code you need to put where you want the
 widget to appear:
 
-.Sample invocation of Mobino Widget
+.Minimal sample invocation of Mobino Widget:
+----
+<div id="mobino">
+  <script src="http://mobino.com/api/mobino.js"></script>
+  <script>
+    MobinoLoader.createPayment({'amount':'10.00', 'merchant_id': 99, 'api_key': 'YOUR_API_KEY', 'reference_number': '70824', 'signature': 'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});</script>
+</div>
+----
+
+.Full sample invocation of Mobino Widget:
 ----
 <div id="mobino">
   <script src="http://mobino.com/api/mobino.js"></script>
@@ -55,21 +64,13 @@ widget to appear:
 </div>
 ----
 
-.Sample of a minimalistic invocation of Mobino Widget
-----
-<div id="mobino">
-  <script src="http://mobino.com/api/mobino.js"></script>
-  <script>
-    MobinoLoader.createPayment({'amount':'10.00', 'merchant_id': 99, 'api_key': 'YOUR_API_KEY', 'reference_number': '70824', 'signature': 'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});</script>
-</div>
-----
 
 The parameters are as follows:
 
 [horizontal]
 +env+:: Optional Parameter: Select the environment where you want to create the payment.
 'production' is the default environment. 
-'staging' is a sandbox environment, which will be ready soon. 
+'staging' is a sandbox environment. 
 +lang+:: Optional Parameter: Select the language of the widget. 
 'en' selects English, the default.
 'fr' selects French.
