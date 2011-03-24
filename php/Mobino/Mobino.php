@@ -10,13 +10,13 @@
 
 class Mobino {
 
-	private $configFile = 'Mobino/settings.ini';
+	private $configFile = 'Mobino/settings.ini.php';
 	private $configData = array();
 	private $params     = array();
 
 	/**
 	 * Constructor
-	 * @author Manuel Reinhard <manu@sprain.ch>
+	 * @author Manuel Reinhard <manu@sprain.ch>, Stefan Schindler <stefan@invisible.ch>
 	 * @param float $amount
 	 * @param string $reference_number
 	 * @param string $transaction_type Should be "regular" or "gift"
@@ -42,7 +42,7 @@ class Mobino {
 
 	/**
 	 * Reads the config file and puts its content into an array.
-	 * @author Manuel Reinhard <manu@sprain.ch>
+	 * @author Manuel Reinhard <manu@sprain.ch>, Stefan Schindler <stefan@invisible.ch>
 	 * @return bool
 	 */
 	private function readConfig(){
@@ -64,7 +64,7 @@ class Mobino {
 			
 		}//if
 		
-		echo "Settings-File not found. Have you copied it over from settings_sample.ini to settings.ini?";
+		echo "Settings-File not found. Have you copied it over from settings_sample.ini.php to settings.ini.php?";
 		exit(1);
 		
 		return false;
