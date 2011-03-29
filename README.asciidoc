@@ -43,24 +43,46 @@ The simplest way to use Mobino is by using the provided Mobino Widget.
 
 Mobino provides you with a JavaScript widget that you can embed on the page
 where a sale is being made. Here's the code you need to put where you want the
-widget to appear:
+button to appear:
 
 .Minimal sample invocation of Mobino Widget:
 ----
 <div id="mobino">
-  <script src="http://mobino.com/api/mobino.js"></script>
+  <script src="http://mobino.com/api/v1/mobino.js"></script>
   <script>
-    MobinoLoader.createPayment({'amount':'10.00', 'merchant_id': 99, 'api_key': 'YOUR_API_KEY', 'reference_number': '70824', 'signature': 'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});</script>
+    Mobino.createButton({
+      transaction: {
+        amount: '10.00',
+        merchant_id: 99,
+        api_key: 'YOUR_API_KEY',
+        reference_number: '70824',
+        transaction_type: 'regular',
+        signature: 'CALCULATED_SIGNATURE'
+      }
+    });
+  </script>
 </div>
 ----
 
 .Full sample invocation of Mobino Widget:
 ----
 <div id="mobino">
-  <script src="http://mobino.com/api/mobino.js"></script>
+  <script src="http://mobino.com/api/v1/mobino.js"></script>
   <script>
-    MobinoLoader.initializer({'env':'production', 'lang': 'fr', 'coutry': 'FR'});
-    MobinoLoader.createPayment({'amount':'10.00', 'merchant_id': 99, 'api_key': 'YOUR_API_KEY', 'reference_number': '70824', 'signature': 'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});</script>
+    Mobino.createButton({
+      lang: 'fr',
+      country: 'CH',
+      callback: 'http://example.com/paymentCompleted.html',
+      transaction: {
+        amount: '2.50',
+        merchant_id: 123,
+        api_key: 'YOUR_API_KEY',
+        reference_number: '79748',
+        transaction_type: 'regular',
+        signature: 'CALCULATED_SIGNATURE'
+      }
+    });
+  </script>
 </div>
 ----
 
@@ -71,28 +93,34 @@ The parameters are as follows:
 +env+:: Optional Parameter: Select the environment where you want to create the payment.
 'production' is the default environment. 
 'staging' is a sandbox environment. 
-+lang+:: Optional Parameter: Select the language of the widget. 
-'en' selects English, the default.
-'fr' selects French.
-'de' selects German.
++lang+:: Optional Parameter: Select the language of the widget and popup.
+  'en' selects English, the default.
+  'fr' selects French.
+  'de' selects German.
 +country+:: Optional Parameter: Overrides the country-detection, based on GeoIP. 
 The Country code has to be in capitals. Currently supported:
-'UK' selects Great Britain, the default.
-'CH' selects Switzerland.
-'FR' selects France.
-'DE' selects Germany. 
-+amount+:: The amount to charge in Euro's and Cent's, formatted as a string.
+  'UK' selects Great Britain, the default.
+  'CH' selects Switzerland.
+  'FR' selects France.
+  'DE' selects Germany.
++callback+:: Optional Parameter: If passed a string the user will be redirected to this page
+when he successfully completed his transaction. If passed a function the function is called
+with +\'success\'+ when the transaction was successful and with +\'failure\'+ if the transaction
+was unsuccessful. *Note:* This is only there to improve the user experience and you need to
+use the server callback to verify the payment.
++transaction+:: The transaction that should be started when the user clicks on the button.
++transaction.amount+:: The amount to charge in Euro's and Cent's, formatted as a string.
 Separator of Euros and Cents is a +.+ (dot), not a comma. No other formatting
 is allowed (thousand separators etc.)
-+merchant_id+:: Your merchant id. Will be provided to you by us.
-+api_key+:: The API key found discussed above.
-+reference_number+:: An 'optional' reference number that you can use to track
++transaction.merchant_id+:: Your merchant id. Will be provided to you by us.
++transaction.api_key+:: The API key found discussed above.
++transaction.reference_number+:: An 'optional' reference number that you can use to track
 the payment. We will provide you this reference number in the callback we do on
 a successful transaction.
-+transaction_type+:: Either +regular+ or +gift+. A regular transaction is one,
++transaction.transaction_type+:: Either +regular+ or +gift+. A regular transaction is one,
 where you bill your customer and get paid. A gift transaction is one where you
 provide some (virtual) gift to the customer (no money is being transfered)
-+signature+:: A signature of the parameters. See section on 'Signature'
++transaction.signature+:: A signature of the parameters. See section on 'Signature'
 
 
 Signature
