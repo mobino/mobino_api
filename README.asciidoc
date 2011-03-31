@@ -72,6 +72,7 @@ button to appear:
     Mobino.createButton({
       lang: 'fr',
       country: 'CH',
+      env: 'staging',
       callback: 'http://example.com/paymentCompleted.html',
       transaction: {
         amount: '2.50',
@@ -91,13 +92,13 @@ The parameters are as follows:
 
 [horizontal]
 +env+:: Optional Parameter: Select the environment where you want to create the payment.
-'production' is the default environment. 
-'staging' is a sandbox environment. 
+  'production' is the default environment.
+  'staging' is a sandbox environment.
 +lang+:: Optional Parameter: Select the language of the widget and popup.
   'en' selects English, the default.
   'fr' selects French.
   'de' selects German.
-+country+:: Optional Parameter: Overrides the country-detection, based on GeoIP. 
++country+:: Optional Parameter: Overrides the country-detection, based on GeoIP.
 The Country code has to be in capitals. Currently supported:
   'UK' selects Great Britain, the default.
   'CH' selects Switzerland.
