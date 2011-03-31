@@ -220,10 +220,30 @@ Writing your own widget
 -----------------------
 
 It is of course possible to work without the mobino widget. You will need to
-call our API directly.
+call our API directly. This is a two-step process. First, you need to generate
+a token for your transaction. Second, you need to poll the service for the state
+of the transaction.
 
-Documentation to follow.
-* Calling the transaction API
-* Monitoring the status of a transaction
+Step 1: Retrieve a token
+~~~~~~~~~~~~~~~~~~~~~~~~
 
+Call the URL +http://merchants.mobino.com/tokens.js?json=TRANSACTION_DATA+ where
++TRANSACTION_DATA+ is a JSON string with the signed transaction data.
 
+The response will have the form:
+----
+{"token":1234}
+----
+
+The optional +callback+ parameter allows cross-domain requests with JSONP.
+
+Step 2: Monitoring the status of a transaction
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To retrieve the status of the transaction you can call the URL
++http://merchants.mobino.com/transactions/REFERENCE_NUMBER/TOKEN/MERCHANT_ID+
+where +REFERENCE_NUMBER+ is the reference number of the current transaction, +MERCHANT_ID+
+is your merchant id, and +TOKEN+ is the token you retrieved in step 1.
+
+This call also allows for the optional +callback+ parameter to enable you to
+call it from Javascript.
