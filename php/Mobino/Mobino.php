@@ -10,29 +10,31 @@
 
 class Mobino {
 
-	private $configFile = 'Mobino/settings.ini';
+	private $configFile = 'Mobino/settings.ini.php';
 	private $configData = array();
 	private $params     = array();
 
 	/**
 	 * Constructor
-	 * @author Manuel Reinhard <manu@sprain.ch>
+	 * @author Manuel Reinhard <manu@sprain.ch>, Stefan Schindler <stefan@invisible.ch>
 	 * @param float $amount
 	 * @param string $reference_number
 	 * @param string $transaction_type Should be "regular" or "gift"
 	 * @param string $env Should be "production" or "staging"
 	 * @return bool
 	 */
-	public function __construct($amount, $reference_number="", $transaction_type='regular', $env='production'){
+	public function __construct($amount, $reference_number, $transaction_type='regular', $env='production', $lang='en', $country='') {
 	
 		//read config file
 		if(!$this->readConfig()){return false;}
 		
 		//save data
-		$this->params['amount']            = sprintf('%.2f', $amount);
+		$this->params['amount'] = sprintf('%.2f', $amount);
 		$this->params['reference_number']  = $reference_number;
 		$this->params['transaction_type']  = $transaction_type;
-		$this->params['env']               = $env;
+		$this->params['env'] = $env;
+		$this->params['lang'] = $lang;
+		$this->params['country'] = $country;
 
 		return true;
 	}
@@ -40,7 +42,7 @@ class Mobino {
 
 	/**
 	 * Reads the config file and puts its content into an array.
-	 * @author Manuel Reinhard <manu@sprain.ch>
+	 * @author Manuel Reinhard <manu@sprain.ch>, Stefan Schindler <stefan@invisible.ch>
 	 * @return bool
 	 */
 	private function readConfig(){
@@ -62,6 +64,9 @@ class Mobino {
 			
 		}//if
 		
+		echo "Settings-File not found. Have you copied it over from settings_sample.ini.php to settings.ini.php?";
+		exit(1);
+		
 		return false;
 	}//function
 	
@@ -71,8 +76,7 @@ class Mobino {
 	 * @author Manuel Reinhard <manu@sprain.ch>
 	 * @return mixed
 	 */
-	private function alternativeParseIniFile($file){
-		
+	private function alternativeParseIniFile($file) {
 		$lines = file($file);
 		$config = array();
 		$arrayKey = "";
@@ -128,18 +132,11 @@ class Mobino {
 	 * @return string
 	 */
 	public function getWidget(){
-		
-		$code = sprintf("<div id='mobino'>\n<script src='http://mobino.com/api/mobino.js'></script>\n<script>MobinoLoader.load();MobinoLoader.config({'env':'%s', 'transaction_type': '%s'});</script>\n<script>MobinoLoader.createPayment({'amount':'%s', 'merchant_id': %s, 'api_key': '%s', 'reference_number': '%s', 'signature': '%s', 'transaction_type': '%s'});</script>\n</div>\n", 		
- 		$this->params['env'],
- 		$this->params['transaction_type'],
- 		$this->params['amount'],
- 		$this->configData[$this->params['env']]['merchant_id'],
- 		$this->configData[$this->params['env']]['api_key'],
- 		$this->params['reference_number'],
- 		$this->getSignature(),
- 		$this->params['transaction_type']);
- 		
- 		return $code;
+		return "<div id='mobino'>\n<script src='http://mobino.com/api/mobino.js'></script>\n"
+			."<script>\n"
+				.'MobinoLoader.initializer({"env":"'.$this->params['env'].'", "lang": "'.$this->params['lang'].'"'.($this->params['country'] == ""? '' : ' ,"country":"'.$this->params['country'].'"').'});'."\n"
+				.'MobinoLoader.createPayment({"amount": "'.$this->params['amount'].'", "merchant_id": '.$this->configData[$this->params['env']]['merchant_id'].', "api_key": "'.$this->configData[$this->params['env']]['api_key'].'", "reference_number": "'.$this->params['reference_number'].'", "signature": "'.$this->getSignature().'", "transaction_type": "'.$this->params['transaction_type'].'"});'."\n"
+			."</script>\n</div>\n";
 	}
 
 	

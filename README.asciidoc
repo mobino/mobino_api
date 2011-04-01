@@ -43,46 +43,85 @@ The simplest way to use Mobino is by using the provided Mobino Widget.
 
 Mobino provides you with a JavaScript widget that you can embed on the page
 where a sale is being made. Here's the code you need to put where you want the
-widget to appear:
+button to appear:
 
-.Sample invocation of Mobino Widget
+.Minimal sample invocation of Mobino Widget:
 ----
 <div id="mobino">
-  <script src="http://mobino.com/api/mobino.js"></script>
+  <script src="http://mobino.com/api/v1/mobino.js"></script>
   <script>
-    MobinoLoader.initializer({'env':'production', 'lang': 'fr', 'coutry': 'FR'});
-    MobinoLoader.createPayment({'amount':'10.00', 'merchant_id': 99, 'api_key': 'YOUR_API_KEY', 'reference_number': '70824', 'signature': 'CALCULATED_SIGNATURE', 'transaction_type': 'regular'});</script>
+    Mobino.createButton({
+      transaction: {
+        amount: '10.00',
+        merchant_id: 99,
+        api_key: 'YOUR_API_KEY',
+        reference_number: '70824',
+        transaction_type: 'regular',
+        signature: 'CALCULATED_SIGNATURE'
+      }
+    });
+  </script>
 </div>
 ----
+
+.Full sample invocation of Mobino Widget:
+----
+<div id="mobino">
+  <script src="http://mobino.com/api/v1/mobino.js"></script>
+  <script>
+    Mobino.createButton({
+      lang: 'fr',
+      country: 'CH',
+      env: 'staging',
+      callback: 'http://example.com/paymentCompleted.html',
+      transaction: {
+        amount: '2.50',
+        merchant_id: 123,
+        api_key: 'YOUR_API_KEY',
+        reference_number: '79748',
+        transaction_type: 'regular',
+        signature: 'CALCULATED_SIGNATURE'
+      }
+    });
+  </script>
+</div>
+----
+
 
 The parameters are as follows:
 
 [horizontal]
 +env+:: Optional Parameter: Select the environment where you want to create the payment.
-'production' is the default environment. 
-'staging' is a sandbox environment, which will be ready soon. 
-+lang+:: Optional Parameter: Select the language of the widget. 
-'en' selects English, the default.
-'fr' selects French.
-'de' selects German.
-+country+:: Optional Parameter: Overrides the country-detection, based on GeoIP. 
+  'production' is the default environment.
+  'staging' is a sandbox environment.
++lang+:: Optional Parameter: Select the language of the widget and popup.
+  'en' selects English, the default.
+  'fr' selects French.
+  'de' selects German.
++country+:: Optional Parameter: Overrides the country-detection, based on GeoIP.
 The Country code has to be in capitals. Currently supported:
-'UK' selects Great Britain, the default.
-'CH' selects Switzerland.
-'FR' selects France.
-'DE' selects Germany. 
-+amount+:: The amount to charge in Euro's and Cent's, formatted as a string.
+  'UK' selects Great Britain, the default.
+  'CH' selects Switzerland.
+  'FR' selects France.
+  'DE' selects Germany.
++callback+:: Optional Parameter: If passed a string the user will be redirected to this page
+when he successfully completed his transaction. If passed a function the function is called
+with +\'success\'+ when the transaction was successful and with +\'failure\'+ if the transaction
+was unsuccessful. *Note:* This is only there to improve the user experience and you need to
+use the server callback to verify the payment.
++transaction+:: The transaction that should be started when the user clicks on the button.
++transaction.amount+:: The amount to charge in Euro's and Cent's, formatted as a string.
 Separator of Euros and Cents is a +.+ (dot), not a comma. No other formatting
 is allowed (thousand separators etc.)
-+merchant_id+:: Your merchant id. Will be provided to you by us.
-+api_key+:: The API key found discussed above.
-+reference_number+:: An 'optional' reference number that you can use to track
++transaction.merchant_id+:: Your merchant id. Will be provided to you by us.
++transaction.api_key+:: The API key found discussed above.
++transaction.reference_number+:: An 'optional' reference number that you can use to track
 the payment. We will provide you this reference number in the callback we do on
 a successful transaction.
-+transaction_type+:: Either +regular+ or +gift+. A regular transaction is one,
++transaction.transaction_type+:: Either +regular+ or +gift+. A regular transaction is one,
 where you bill your customer and get paid. A gift transaction is one where you
 provide some (virtual) gift to the customer (no money is being transfered)
-+signature+:: A signature of the parameters. See section on 'Signature'
++transaction.signature+:: A signature of the parameters. See section on 'Signature'
 
 
 Signature
@@ -181,10 +220,72 @@ Writing your own widget
 -----------------------
 
 It is of course possible to work without the mobino widget. You will need to
-call our API directly.
+call our API directly. This is a two-step process. First, you need to generate
+a token for your transaction. Second, you need to poll the service for the state
+of the transaction.
 
-Documentation to follow.
-* Calling the transaction API
-* Monitoring the status of a transaction
+Step 1: Retrieve a token
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Call the URL +http://merchants.mobino.com/tokens.js?json=TRANSACTION_DATA+ where
++TRANSACTION_DATA+ is a JSON string with the signed transaction data.
+
+The response will have the form:
+----
+{"token":1234}
+----
+
+The optional +callback+ parameter allows cross-domain requests with JSONP.
+
+Step 2: Monitoring the status of a transaction
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To retrieve the status of the transaction you can call the URL
++http://merchants.mobino.com/transactions/REFERENCE_NUMBER/TOKEN/MERCHANT_ID+
+where +REFERENCE_NUMBER+ is the reference number of the current transaction, +MERCHANT_ID+
+is your merchant id, and +TOKEN+ is the token you retrieved in step 1.
+
+This call also allows for the optional +callback+ parameter to enable you to
+call it from Javascript.
 
 
+Optional: Return Telephone number to call
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In order to show the buyer the local telephone number for Mobino, you can ask
+Mobino for the preferred telephone number based on the buyers IP and an
+optional language:
+
+Call the URL +http://merchants.mobino.com/api/v1/preferred_phone_numbers+ with
+the following parameters:
+
+[options="header"]
+|=======
+| Parameter | Description 
+| +ip+      | the ip address of the buyer
+| +lang+    | the default language preferred
+|========
+
+This call returns a JSON array with the following informations
+
+
+[options="header"]
+|=======
+| Name             | Description 
+| country          | the country that the buyer is in
+| preferred_number | Array with [country, language, phone_number]
+| other_numbers    | Array with all other possible phone numbers (in same format as preferred_number
+|=======
+
+Example:
+^^^^^^^^
+  
+----
+GET /api/v1/preferred_phone_numbers?ip=12.12.12.12&lang=de
+
+{ 'country' : 'CH',
+  'preferred_number' : ['CH', 'de', '+41 43 508 05 18'],
+  'other_numbers' : [['CH', 'fr', '+41 22 123 12 12'],
+                     ['DE', 'de', '+49 89 123 123 123']]
+}
+----
