@@ -31,7 +31,7 @@ successful transaction. Details to be found in the section 'Callback URL'.
 API Credentials
 ^^^^^^^^^^^^^^^
 
-The +API Key+ is used to identify you to the Mobino payment application. The
+The +API key+ is used to identify you to the Mobino payment application. The
 +API Secret+ is used to sign your calls to us. While the key is public and
 transmitted in the clear, the secret is never published and you should keep it
 guarded.
@@ -209,7 +209,7 @@ unauthorized, then the customer didn't approve the transaction.
 +amount+:: The amount of the transaction (formatted with two decimal digits)
 +reference_number+:: The reference number you passed in when you generated the
 request for a transaction
-+api_key+:: your API Key
++api_key+:: your API key
 +signature+:: The signature for the above parameters
 
 At the moment, the parameters are returned url-encoded. In the future, you will
@@ -227,29 +227,74 @@ of the transaction.
 Step 1: Retrieve a token
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Call the URL +http://merchants.mobino.com/tokens.js?json=TRANSACTION_DATA+ where
-+TRANSACTION_DATA+ is a JSON string with the signed transaction data.
+Call the URL +http://merchants.mobino.com/tokens.js+ with the following parameters:
 
-The response will have the form:
+[options="header"]
+|========
+| Parameter             | Description
+| +amount+              | the amount of the transaction (formatted with two decimal digits)
+| +merchant_id+         | your merchant id
+| +api_key+             | your API key
+| +reference_number+    | a reference number for that will be passed back to your server
+| +transaction_type+    | the type of the transaction, either +regular+ or +gift+
+| +signature+           | a signature over all above parameters as described in the section _Signature_
+| +callback+ (optional) | if this parameter is passed, the JSON response will be wrapped in a function call to allow cross domain JSONP requests.
+|========
+
+The response will be a JSON object with the following field:
+
+[options="header"]
+|========
+| Field         | Description
+| +token+ (int) | the token
+|========
+
+
+.Example
 ----
+GET /api/v1/tokens.json?amount=2.50&merchant_id=1&api_key=YOUR_KEY&reference_number=79748&transaction_type=regular&signature=CALCULATED_SINATURE
+
 {"token":1234}
 ----
-
-The optional +callback+ parameter allows cross-domain requests with JSONP.
 
 Step 2: Monitoring the status of a transaction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To retrieve the status of the transaction you can call the URL
-+http://merchants.mobino.com/transactions/REFERENCE_NUMBER/TOKEN/MERCHANT_ID+
-where +REFERENCE_NUMBER+ is the reference number of the current transaction, +MERCHANT_ID+
-is your merchant id, and +TOKEN+ is the token you retrieved in step 1.
+To retrieve the status of the transaction you can call the URL +/api/v1/transactions.json+
+with the following parameters:
 
-This call also allows for the optional +callback+ parameter to enable you to
-call it from Javascript.
+[options="header"]
+|========
+| Parameter             | Description
+| +reference_number+    | the reference number of the current transaction
+| +merchant_id+         | your merchant id
+| +token+               | the token you retrieved in step 1
+| +callback+ (optional) | if this parameter is passed, the JSON response will be wrapped in a function call to allow cross domain JSONP requests.
+|========
+
+The response will be a JSON object with the following fields:
+
+[options="header"]
+|========
+| Field                    | Description
+| +message+ (string)       | a human readable message describing the next step
+| +message_class+ (string) | the transaction status, either +\"in_progress\"+, +\"success\"+, or +\"failure\"+
+| +retry+ (boolean)        | a bool indicating wheather or not you should ping again, false if the transaction failed or is completed
+|========
 
 
-Optional: Return Telephone number to call
+.Example
+----
+GET /api/v1/transaction.json?reference_number=79748&merchant_id=YOUR_MERCHANT_ID&token=TOKEN
+
+{
+  "message": "Your transaction is being processed. Please enter your PIN on the telephone.",
+  "message_class": "in_progress",
+  "retry": true
+}
+----
+
+Optional: Return telephone number to call
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In order to show the buyer the local telephone number for Mobino, you can ask
@@ -261,25 +306,22 @@ the following parameters:
 
 [options="header"]
 |=======
-| Parameter | Description 
+| Parameter | Description
 | +ip+      | the ip address of the buyer
 | +lang+    | the default language preferred
 |========
 
-This call returns a JSON array with the following informations
-
+This call returns a JSON object with the following fields
 
 [options="header"]
 |=======
-| Name             | Description 
+| Name             | Description
 | country          | the country that the buyer is in
 | preferred_number | Array with [country, language, phone_number]
 | other_numbers    | Array with all other possible phone numbers (in same format as preferred_number
 |=======
 
-Example:
-^^^^^^^^
-  
+.Example
 ----
 GET /api/v1/preferred_phone_numbers?ip=12.12.12.12&lang=de
 
