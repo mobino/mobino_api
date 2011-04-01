@@ -325,15 +325,15 @@ This call returns a JSON object with the following fields
 ----
 GET /api/v1/preferred_phone_numbers?ip=12.12.12.12&lang=de
 
-{ 'country' : 'CH',
-  'preferred_number' : {'country': 'CH',                     
-                        'language' : 'de',                   
-                        'phone_number' : '+41 43 508 05 18'},
-  'other_numbers' : [{'country': 'CH',                       
-                      'language' : 'fr',                     
-                       'phone_number' : '+41 22 123 12 12'}, 
-                     {'country': 'DE',                       
-                      'language' : 'de',                     
-                      'phone_number' : '+49 30 123 123 12'}] 
+{ "country": "CH",
+  "preferred_number": { "country": "CH",
+                        "language": "de",
+                        "phone_number": "+41 43 508 05 18"},
+  "other_numbers": [{ "country": "CH",
+                      "language": "fr",
+                      "phone_number": "+41 22 123 12 12"},
+                    { "country": "DE",
+                      "language": "de",
+                      "phone_number": "+49 30 123 123 12"}]
 }
 ----
