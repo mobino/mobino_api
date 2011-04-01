@@ -1060,7 +1060,7 @@ cellspacing="0" cellpadding="4">
 <div class="paragraph"><p>In order to show the buyer the local telephone number for Mobino, you can ask
 Mobino for the preferred telephone number based on the buyers IP and an
 optional language:</p></div>
-<div class="paragraph"><p>Call the URL <tt>http://merchants.mobino.com/api/v1/preferred_phone_numbers</tt> with
+<div class="paragraph"><p>Call the URL <tt>http://merchants.mobino.com/api/v1/preferred_phone_numbers.json</tt> with
 the following parameters:</p></div>
 <div class="tableblock">
 <table rules="all"
@@ -1120,7 +1120,7 @@ cellspacing="0" cellpadding="4">
 <div class="listingblock">
 <div class="title">Example</div>
 <div class="content">
-<pre><tt>GET /api/v1/preferred_phone_numbers?ip=12.12.12.12&amp;lang=de
+<pre><tt>GET /api/v1/preferred_phone_numbers.json?ip=12.12.12.12&amp;lang=de
 
 { "country": "CH",
   "preferred_number": { "country": "CH",
@@ -1141,7 +1141,7 @@ cellspacing="0" cellpadding="4">
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2011-04-01 17:58:48 CEST
+Last updated 2011-04-01 18:02:48 CEST
 </div>
 </div>
 </body>
