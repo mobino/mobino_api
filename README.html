@@ -568,7 +568,7 @@ the old pair of credentials will stop working.</td>
 successful transaction. Details to be found in the section <em>Callback URL</em>.</p></div>
 <div class="sect3">
 <h4 id="_api_credentials">API Credentials</h4>
-<div class="paragraph"><p>The <tt>API Key</tt> is used to identify you to the Mobino payment application. The
+<div class="paragraph"><p>The <tt>API key</tt> is used to identify you to the Mobino payment application. The
 <tt>API Secret</tt> is used to sign your calls to us. While the key is public and
 transmitted in the clear, the secret is never published and you should keep it
 guarded.</p></div>
@@ -875,7 +875,7 @@ request for a transaction
 </dt>
 <dd>
 <p>
-your API Key
+your API key
 </p>
 </dd>
 <dt class="hdlist1">
@@ -900,23 +900,240 @@ a token for your transaction. Second, you need to poll the service for the state
 of the transaction.</p></div>
 <div class="sect2">
 <h3 id="_step_1_retrieve_a_token">Step 1: Retrieve a token</h3>
-<div class="paragraph"><p>Call the URL <tt>http://merchants.mobino.com/tokens.js?json=TRANSACTION_DATA</tt> where
-<tt>TRANSACTION_DATA</tt> is a JSON string with the signed transaction data.</p></div>
-<div class="paragraph"><p>The response will have the form:</p></div>
+<div class="paragraph"><p>Call the URL <tt>http://merchants.mobino.com/tokens.js</tt> with the following parameters:</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="50%" />
+<col width="50%" />
+<thead>
+<tr>
+<th align="left" valign="top"> Parameter             </th>
+<th align="left" valign="top"> Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>amount</tt></p></td>
+<td align="left" valign="top"><p class="table">the amount of the transaction (formatted with two decimal digits)</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>merchant_id</tt></p></td>
+<td align="left" valign="top"><p class="table">your merchant id</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>api_key</tt></p></td>
+<td align="left" valign="top"><p class="table">your API key</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>reference_number</tt></p></td>
+<td align="left" valign="top"><p class="table">a reference number for that will be passed back to your server</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>transaction_type</tt></p></td>
+<td align="left" valign="top"><p class="table">the type of the transaction, either <tt>regular</tt> or <tt>gift</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>signature</tt></p></td>
+<td align="left" valign="top"><p class="table">a signature over all above parameters as described in the section <em>Signature</em></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>callback</tt> (optional)</p></td>
+<td align="left" valign="top"><p class="table">if this parameter is passed, the JSON response will be wrapped in a function call to allow cross domain JSONP requests.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>The response will be a JSON object with the following field:</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="50%" />
+<col width="50%" />
+<thead>
+<tr>
+<th align="left" valign="top"> Field         </th>
+<th align="left" valign="top"> Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>token</tt> (int)</p></td>
+<td align="left" valign="top"><p class="table">the token</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="listingblock">
+<div class="title">Example</div>
 <div class="content">
-<pre><tt>{"token":1234}</tt></pre>
+<pre><tt>GET /api/v1/tokens.json?amount=2.50&amp;merchant_id=1&amp;api_key=YOUR_KEY&amp;reference_number=79748&amp;transaction_type=regular&amp;signature=CALCULATED_SINATURE
+
+{"token":1234}</tt></pre>
 </div></div>
-<div class="paragraph"><p>The optional <tt>callback</tt> parameter allows cross-domain requests with JSONP.</p></div>
 </div>
 <div class="sect2">
 <h3 id="_step_2_monitoring_the_status_of_a_transaction">Step 2: Monitoring the status of a transaction</h3>
-<div class="paragraph"><p>To retrieve the status of the transaction you can call the URL
-<tt>http://merchants.mobino.com/transactions/REFERENCE_NUMBER/TOKEN/MERCHANT_ID</tt>
-where <tt>REFERENCE_NUMBER</tt> is the reference number of the current transaction, <tt>MERCHANT_ID</tt>
-is your merchant id, and <tt>TOKEN</tt> is the token you retrieved in step 1.</p></div>
-<div class="paragraph"><p>This call also allows for the optional <tt>callback</tt> parameter to enable you to
-call it from Javascript.</p></div>
+<div class="paragraph"><p>To retrieve the status of the transaction you can call the URL <tt>/api/v1/transactions.json</tt>
+with the following parameters:</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="50%" />
+<col width="50%" />
+<thead>
+<tr>
+<th align="left" valign="top"> Parameter             </th>
+<th align="left" valign="top"> Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>reference_number</tt></p></td>
+<td align="left" valign="top"><p class="table">the reference number of the current transaction</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>merchant_id</tt></p></td>
+<td align="left" valign="top"><p class="table">your merchant id</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>token</tt></p></td>
+<td align="left" valign="top"><p class="table">the token you retrieved in step 1</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>callback</tt> (optional)</p></td>
+<td align="left" valign="top"><p class="table">if this parameter is passed, the JSON response will be wrapped in a function call to allow cross domain JSONP requests.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>The response will be a JSON object with the following fields:</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="50%" />
+<col width="50%" />
+<thead>
+<tr>
+<th align="left" valign="top"> Field                    </th>
+<th align="left" valign="top"> Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>message</tt> (string)</p></td>
+<td align="left" valign="top"><p class="table">a human readable message describing the next step</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>message_class</tt> (string)</p></td>
+<td align="left" valign="top"><p class="table">the transaction status, either <tt>\"in_progress\"</tt>, <tt>\"success\"</tt>, or <tt>\"failure\"</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>retry</tt> (boolean)</p></td>
+<td align="left" valign="top"><p class="table">a bool indicating wheather or not you should ping again, false if the transaction failed or is completed</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre><tt>GET /api/v1/transaction.json?reference_number=79748&amp;merchant_id=YOUR_MERCHANT_ID&amp;token=TOKEN
+
+{
+  "message": "Your transaction is being processed. Please enter your PIN on the telephone.",
+  "message_class": "in_progress",
+  "retry": true
+}</tt></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_optional_return_telephone_number_to_call">Optional: Return telephone number to call</h3>
+<div class="paragraph"><p>In order to show the buyer the local telephone number for Mobino, you can ask
+Mobino for the preferred telephone number based on the buyers IP and an
+optional language:</p></div>
+<div class="paragraph"><p>Call the URL <tt>http://merchants.mobino.com/api/v1/preferred_phone_numbers</tt> with
+the following parameters:</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="50%" />
+<col width="50%" />
+<thead>
+<tr>
+<th align="left" valign="top"> Parameter </th>
+<th align="left" valign="top"> Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>ip</tt></p></td>
+<td align="left" valign="top"><p class="table">the ip address of the buyer</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><tt>lang</tt></p></td>
+<td align="left" valign="top"><p class="table">the default language preferred</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>This call returns a JSON object with the following fields</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="50%" />
+<col width="50%" />
+<thead>
+<tr>
+<th align="left" valign="top"> Name             </th>
+<th align="left" valign="top"> Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">country</p></td>
+<td align="left" valign="top"><p class="table">the country that the buyer is in</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">preferred_number</p></td>
+<td align="left" valign="top"><p class="table">Array with [country, language, phone_number]</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">other_numbers</p></td>
+<td align="left" valign="top"><p class="table">Array with all other possible phone numbers (in same format as preferred_number</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre><tt>GET /api/v1/preferred_phone_numbers?ip=12.12.12.12&amp;lang=de
+
+{ "country": "CH",
+  "preferred_number": { "country": "CH",
+                        "language": "de",
+                        "phone_number": "+41 43 508 05 18"},
+  "other_numbers": [{ "country": "CH",
+                      "language": "fr",
+                      "phone_number": "+41 22 123 12 12"},
+                    { "country": "DE",
+                      "language": "de",
+                      "phone_number": "+49 30 123 123 12"}]
+}</tt></pre>
+</div></div>
 </div>
 </div>
 </div>
@@ -924,7 +1141,7 @@ call it from Javascript.</p></div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2011-03-31 19:31:30 CEST
+Last updated 2011-04-01 17:58:48 CEST
 </div>
 </div>
 </body>
