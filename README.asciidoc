@@ -278,8 +278,7 @@ The response will be a JSON object with the following fields:
 |========
 | Field                    | Description
 | +message+ (string)       | a human readable message describing the next step
-| +message_class+ (string) | the transaction status, either +\"in_progress\"+, +\"success\"+, or +\"failure\"+
-| +retry+ (boolean)        | a bool indicating wheather or not you should ping again, false if the transaction failed or is completed
+| +status+ (string)        | the transaction status, either +"in_progress"+, +"success"+, or +"failure"+
 |========
 
 
@@ -289,8 +288,7 @@ GET /api/v1/transaction.json?reference_number=79748&merchant_id=YOUR_MERCHANT_ID
 
 {
   "message": "Your transaction is being processed. Please enter your PIN on the telephone.",
-  "message_class": "in_progress",
-  "retry": true
+  "status": "in_progress"
 }
 ----
 
