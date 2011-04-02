@@ -281,6 +281,9 @@ The response will be a JSON object with the following fields:
 | +status+ (string)        | the transaction status, either +"in_progress"+, +"success"+, or +"failure"+
 |========
 
+If the +status+ is +"in_progress"+ you have to call the URL again until the transaction succeeded of failed.
+A good time interval between two polls is 5 seconds.
+
 
 .Example
 ----
