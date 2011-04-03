@@ -1033,16 +1033,14 @@ cellspacing="0" cellpadding="4">
 <td align="left" valign="top"><p class="table">a human readable message describing the next step</p></td>
 </tr>
 <tr>
-<td align="left" valign="top"><p class="table"><tt>message_class</tt> (string)</p></td>
-<td align="left" valign="top"><p class="table">the transaction status, either <tt>\"in_progress\"</tt>, <tt>\"success\"</tt>, or <tt>\"failure\"</tt></p></td>
-</tr>
-<tr>
-<td align="left" valign="top"><p class="table"><tt>retry</tt> (boolean)</p></td>
-<td align="left" valign="top"><p class="table">a bool indicating wheather or not you should ping again, false if the transaction failed or is completed</p></td>
+<td align="left" valign="top"><p class="table"><tt>status</tt> (string)</p></td>
+<td align="left" valign="top"><p class="table">the transaction status, either <tt>"in_progress"</tt>, <tt>"success"</tt>, or <tt>"failure"</tt></p></td>
 </tr>
 </tbody>
 </table>
 </div>
+<div class="paragraph"><p>If the <tt>status</tt> is <tt>"in_progress"</tt> you have to call the URL again until the transaction succeeded of failed.
+A good time interval between two polls is 5 seconds.</p></div>
 <div class="listingblock">
 <div class="title">Example</div>
 <div class="content">
@@ -1050,8 +1048,7 @@ cellspacing="0" cellpadding="4">
 
 {
   "message": "Your transaction is being processed. Please enter your PIN on the telephone.",
-  "message_class": "in_progress",
-  "retry": true
+  "status": "in_progress"
 }</tt></pre>
 </div></div>
 </div>
@@ -1141,7 +1138,7 @@ cellspacing="0" cellpadding="4">
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2011-04-01 18:02:48 CEST
+Last updated 2011-04-03 11:12:19 CEST
 </div>
 </div>
 </body>
