@@ -227,7 +227,7 @@ of the transaction.
 Step 1: Retrieve a token
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Call the URL +http://merchants.mobino.com/tokens.js+ with the following parameters:
+Call the URL +http://merchants.mobino.com/api/v1/tokens.json+ with the following parameters:
 
 [options="header"]
 |========
