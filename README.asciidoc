@@ -279,8 +279,7 @@ The response will be a JSON object with the following fields:
 |========
 | Field                    | Description
 | +message+ (string)       | a human readable message describing the next step
-| +status+ (string)        | the transaction status, for example +"in_progress"+,
-+"success"+, or +"failure"+. See below for compelete list
+| +status+ (string)        | the transaction status, for example +"in_progress"+, +"success"+, or +"failure"+. See below for compelete list
 |========
 
 If the +status+ is +"in_progress"+ you have to call the URL again until the transaction succeeded of failed.
@@ -289,11 +288,12 @@ A good time interval between two polls is 5 seconds.
 [options="header"]
 |===========
 | Status         | Message
+| +initializing+ | Initializing...
+| +in_progress+  | Your transaction is being processed. Please enter your PIN on the telephone.
+| +authorizing+  | Your transaction is being authorized. 
 | +authorized+   | This transaction was successfully completed.
 | +expired+      | Transaction has expired. Please restart the payment process.
 | +failure+      | This transaction could not be completed.
-| +in_progress+  | Your transaction is being processed. Please enter your PIN on the telephone.
-| +initializing+ | Initializing...
 | +rejected+     | This transaction was rejected.
 | +success+      | "Payment received. Your reference number for this transaction is: %{reference_number}"
 | +unauthorized+ | This transaction could be not authorized.
