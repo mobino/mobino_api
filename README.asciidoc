@@ -290,6 +290,7 @@ A good time interval between two polls is 5 seconds.
 | Status         | Message
 | +initializing+ | Initializing...
 | +in_progress+  | Your transaction is being processed. Please enter your PIN on the telephone.
+| +wrong_pin     | You have entered the wrong PIN. Please try again.
 | +authorizing+  | Your transaction is being authorized. 
 | +authorized+   | This transaction was successfully completed.
 | +expired+      | Transaction has expired. Please restart the payment process.
