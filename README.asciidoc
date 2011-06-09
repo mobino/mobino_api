@@ -50,6 +50,7 @@ button to appear:
 <div id="mobino">
   <script src="http://mobino.com/api/v1/mobino.js"></script>
   <script>
+    Mobino.serverUrl = 'https://staging.mobino.com/merchants';
     Mobino.createButton({
       transaction: {
         amount: '10.00',
@@ -69,7 +70,8 @@ button to appear:
 <div id="mobino">
   <script src="http://mobino.com/api/v1/mobino.js"></script>
   <script>
-    Mobino.createButton({
+    Mobino.serverUrl = 'https://staging.mobino.com/merchants';
+     Mobino.createButton({
       lang: 'fr',
       country: 'CH',
       env: 'staging',
