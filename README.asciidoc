@@ -74,7 +74,6 @@ button to appear:
      Mobino.createButton({
       lang: 'fr',
       country: 'CH',
-      env: 'staging',
       callback: 'http://example.com/paymentCompleted.html',
       transaction: {
         amount: '2.50',
@@ -89,13 +88,14 @@ button to appear:
 </div>
 ----
 
+Be sure to set the +serverUrl+ on the Mobino object first. If you are using the
+staging / sandbox enviornment, the correct value is
++https://staging.mobino.com/merchants+. The *production* environments has
++http://live.mobino.com/merchants+.
 
 The parameters are as follows:
 
 [horizontal]
-+env+:: Optional Parameter: Select the environment where you want to create the payment.
-  'production' is the default environment.
-  'staging' is a sandbox environment.
 +lang+:: Optional Parameter: Select the language of the widget and popup.
   'en' selects English, the default.
   'fr' selects French.
