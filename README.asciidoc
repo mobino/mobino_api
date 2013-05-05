@@ -53,11 +53,9 @@ button to appear:
     Mobino.serverUrl = 'https://staging.mobino.com/merchants';
     Mobino.createButton({
       transaction: {
-        amount: '10.00',
-        merchant_id: 99,
+        amount: 10.00,
         api_key: 'YOUR_API_KEY',
         reference_number: '70824',
-        transaction_type: 'regular',
         signature: 'CALCULATED_SIGNATURE'
       }
     });
@@ -76,8 +74,8 @@ button to appear:
       country: 'CH',
       callback: 'http://example.com/paymentCompleted.html',
       transaction: {
-        amount: '2.50',
-        merchant_id: 123,
+        amount: 2.50,
+        currency: 'EUR',
         api_key: 'YOUR_API_KEY',
         reference_number: '79748',
         transaction_type: 'regular',
@@ -112,12 +110,11 @@ with +\'success\'+ when the transaction was successful and with +\'failure\'+ if
 was unsuccessful. *Note:* This is only there to improve the user experience and you need to
 use the server callback to verify the payment.
 +transaction+:: The transaction that should be started when the user clicks on the button.
-+transaction.amount+:: The amount to charge in Euro's and Cent's, formatted as a string.
++transaction.amount+:: The amount to charge in Euro's and Cent's.
 Separator of Euros and Cents is a +.+ (dot), not a comma. No other formatting
 is allowed (thousand separators etc.)
-+transaction.merchant_id+:: Your merchant id. Will be provided to you by us.
 +transaction.api_key+:: The API key found discussed above.
-+transaction.reference_number+:: An 'optional' reference number that you can use to track
++transaction.reference_number+:: An reference number that you can use to track
 the payment. We will provide you this reference number in the callback we do on
 a successful transaction.
 +transaction.transaction_type+:: Either +regular+ or +gift+. A regular transaction is one,
@@ -131,71 +128,60 @@ Signature
 
 In order to protect the integrity of your call to Mobino, you will need to
 provide a computed signature. This signature is generated using a one way Hash
-function using the parameters you provide and the 'API Secret' we provide to
+function using the 'reference number' you provide and the 'API Secret' we provide to
 you.
 
-Basically, you will need to sort the parameters, convert them into a string,
-append your secret and then run the Hash function on it.
+Basically, you only have to concatenate your reference number and your 'API Secret',
+and calculate the MD5 hash.
 
-We have code in some languages and will expand this as time goes by. Check out
-the different subfolders to see how the parameters are handled.
-
-Here's a step by step walk through:
-
-.Original parameters
-----
-{'amount':'10.0', 'reference_number': '70824', 'merchant_id': 99, 'transaction_type': 'regular', 'api_key':'YOUR_API_KEY'} 
-----
-
-.Normalize the parameters
-
-----
-{'amount':'10.00', 'reference_number': '70824', 'merchant_id': 99, 'transaction_type': 'regular', 'api_key':'YOUR_API_KEY'} 
-----
-
-Normalization formats the amount with the following pattern: 
-
-----
-sprintf "%.2f", params['amount']
-----
-
-which formats it with two decimal digits.
-
-.Sort parameters
-----
-{'amount': '10.00', 'api_key': 'YOUR_API_KEY', 'merchant_id': 99, 'reference_number': '70824', 'transaction_type': 'regular'}
-----
-
-.Stringify them
-----
-'amount:10.00,api_key:YOUR_API_KEY,merchant_id:99,reference_number:70824,transaction_type:regular'
-----
-
-All the parameters are stored in one string. Key / Value are separated with a
-+:+ and the pairs are separated with commas.
-
-.Prepare for signature creation
-----
-'amount:10.00,api_key:YOUR_API_KEY,merchant_id:99,reference_number:70824,transaction_type:regularAPI_SECRET'
-----
-
-The 'API Secret' is appended to the string. 
-
-.Generate signature
+.For example, your original parameters and your API secret is:
+.'46ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r':
 -----
-Digest::MD5.hexdigest('amount:10.00,api_key:YOUR_API_KEY,merchant_id:99,reference_number:70824,transaction_type:regularAPI_SECRET')
-=> "2ca37559b8cc7a1ae3b6089c59a4d97a"
+Mobino.serverUrl = 'https://staging.mobino.com/merchants';
+ Mobino.createButton({
+  lang: 'fr',
+  country: 'CH',
+  callback: 'http://example.com/paymentCompleted.html',
+  transaction: {
+    amount: 2.50,
+    currency: 'EUR',
+    api_key: 'YOUR_API_KEY',
+    reference_number: '70824',
+    transaction_type: 'regular'
+  }
+});
 -----
 
-This signature is then appended to the paramters:
+.So your signature will be:
+-----
+Ruby:
+Digest::MD5.hexdigest('7082446ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r')
+=> "f47e0842a97bc855627c1442a051322a"
 
-----
-{'amount': '10.00', 'api_key': 'YOUR_API_KEY', 'merchant_id': 99, 'reference_number': '70824',  'transaction_type': 'regular', 'signature' : '2ca37559b8cc7a1ae3b6089c59a4d97a'}
-----
+or
 
-NOTE: On the receiving side, the procedure is repeated (especially the sorting
-of the paramters and the formatting of the amount parameter). Therefore you can
-pass the parameters in random order - the signatures will be created correctly.
+PHP:
+hash('md5', '7082446ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r')
+=> "f47e0842a97bc855627c1442a051322a"
+-----
+
+.This signature is then appended to the parameters:
+-----
+Mobino.serverUrl = 'https://staging.mobino.com/merchants';
+ Mobino.createButton({
+  lang: 'fr',
+  country: 'CH',
+  callback: 'http://example.com/paymentCompleted.html',
+  transaction: {
+    amount: 2.50,
+    currency: 'EUR',
+    api_key: 'YOUR_API_KEY',
+    reference_number: '70824',
+    transaction_type: 'regular',
+    signature: 'f47e0842a97bc855627c1442a051322a'
+  }
+});
+-----
 
 
 Callback URL
@@ -218,7 +204,7 @@ At the moment, the parameters are returned url-encoded. In the future, you will
 be able to select either JSON or URL encoding.
 
 
-Writing your own widget
+Calling directly our APIs
 -----------------------
 
 It is of course possible to work without the mobino widget. You will need to
@@ -235,7 +221,6 @@ Call the URL +http://merchants.mobino.com/api/v1/tokens.json+ with the following
 |========
 | Parameter             | Description
 | +amount+              | the amount of the transaction (formatted with two decimal digits)
-| +merchant_id+         | your merchant id
 | +api_key+             | your API key
 | +reference_number+    | a reference number for that will be passed back to your server
 | +transaction_type+    | the type of the transaction, either +regular+ or +gift+
@@ -254,9 +239,9 @@ The response will be a JSON object with the following field:
 
 .Example
 ----
-GET /api/v1/tokens.json?amount=2.50&merchant_id=1&api_key=YOUR_KEY&reference_number=79748&transaction_type=regular&signature=CALCULATED_SINATURE
+GET /api/v1/tokens.json?amount=2.50&api_key=YOUR_KEY&reference_number=79748&transaction_type=regular&signature=CALCULATED_SINATURE
 
-{"token":1234}
+{"token":12345}
 ----
 
 Step 2: Monitoring the status of a transaction
@@ -268,10 +253,8 @@ with the following parameters:
 [options="header"]
 |========
 | Parameter             | Description
-| +reference_number+    | the reference number of the current transaction
-| +merchant_id+         | your merchant id
+| +api_key+             | your API key
 | +token+               | the token you retrieved in step 1
-| +lang+ (optional)     | the language that you want the text message to be in (can be either +en+, +fr+, +de+ or +it+ - defaults to +fr+)
 | +callback+ (optional) | if this parameter is passed, the JSON response will be wrapped in a function call to allow cross domain JSONP requests.
 |========
 
@@ -293,7 +276,7 @@ A good time interval between two polls is 5 seconds.
 | +initializing+ | Initializing...
 | +in_progress+  | Your transaction is being processed. Please enter your PIN on the telephone.
 | +wrong_pin     | You have entered the wrong PIN. Please try again.
-| +authorizing+  | Your transaction is being authorized. 
+| +authorizing+  | Your transaction is being authorized.
 | +authorized+   | This transaction was successfully completed.
 | +expired+      | Transaction has expired. Please restart the payment process.
 | +failure+      | This transaction could not be completed.
