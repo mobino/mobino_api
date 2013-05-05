@@ -255,6 +255,7 @@ with the following parameters:
 | Parameter             | Description
 | +api_key+             | your API key
 | +token+               | the token you retrieved in step 1
+| +lang+ (optional)     | the language that you want the text message to be in (can be either +en+, +fr+, +de+ or +it+ - defaults to +fr+)
 | +callback+ (optional) | if this parameter is passed, the JSON response will be wrapped in a function call to allow cross domain JSONP requests.
 |========
 
