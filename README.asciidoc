@@ -136,8 +136,7 @@ you.
 Basically, you only have to concatenate your nonce and your 'API Secret',
 and calculate the MD5 hash.
 
-For example, your original parameters and your API secret is:
-'46ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r':
+.For example, your original parameters:
 -----
 Mobino.serverUrl = 'https://staging.mobino.com/merchants';
  Mobino.createButton({
@@ -154,6 +153,7 @@ Mobino.serverUrl = 'https://staging.mobino.com/merchants';
   }
 });
 -----
+and your API secret is: '46ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r'.
 
 .So your signature will be hash_method([RANDOM_NONCE][YOUR_API_SECRET]):
 -----
@@ -208,8 +208,10 @@ At the moment, the parameters are returned url-encoded. In the future, you will
 be able to select either JSON or URL encoding.
 
 
+
+
 Calling directly our APIs
------------------------
+~~~~~~~~~~~~~~~~~~~~~~~
 
 It is of course possible to work without the mobino widget. You will need to
 call our API directly. This is a two-step process. First, you need to generate
