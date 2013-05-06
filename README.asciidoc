@@ -57,6 +57,7 @@ button to appear:
         amount: 10.00,
         api_key: 'YOUR_API_KEY',
         reference_number: 'PO-70824',
+        nonce: '449127420-47481',
         signature: 'CALCULATED_SIGNATURE'
       }
     });
@@ -80,6 +81,7 @@ button to appear:
         api_key: 'YOUR_API_KEY',
         reference_number: 'PO-79748',
         transaction_type: 'regular',
+        nonce: '449127420-68853',
         signature: 'CALCULATED_SIGNATURE'
       }
     });
@@ -107,20 +109,22 @@ The Country code has to be in capitals. Currently supported:
   'DE' selects Germany.
 +callback+:: Optional Parameter: If passed a string the user will be redirected to this page
 when he successfully completed his transaction. If passed a function the function is called
-with +\'success\'+ when the transaction was successful and with +\'failure\'+ if the transaction
+with +'success'+ when the transaction was successful and with +'failure'+ if the transaction
 was unsuccessful. *Note:* This is only there to improve the user experience and you need to
 use the server callback to verify the payment.
 +transaction+:: The transaction that should be started when the user clicks on the button.
 +transaction.amount+:: The amount to charge in Euro's and Cent's.
 Separator of Euros and Cents is a +.+ (dot), not a comma. No other formatting
 is allowed (thousand separators etc.)
++transaction.currency+:: Optional Parameter: The currency used for the payment (if no currency
+is present, your default account currency will be used)
 +transaction.api_key+:: The API key found discussed above.
 +transaction.reference_number+:: An reference number that you can use to track
 the payment. We will provide you this reference number in the callback we do on
 a successful transaction.
-+transaction.transaction_type+:: Either +regular+ or +gift+. A regular transaction is one,
-where you bill your customer and get paid. A gift transaction is one where you
-provide some (virtual) gift to the customer (no money is being transfered)
++transaction.transaction_type+:: Optional Parameter: Either +regular+ or +gift+. A regular
+transaction is one, where you bill your customer and get paid. A gift transaction is one where
+you provide some (virtual) gift to the customer (no money is being transfered)
 +transaction.nonce+:: A random unique string that you send with your request
 +transaction.signature+:: A signature of the parameters. See section on 'Signature'
 
@@ -130,11 +134,11 @@ Signature
 
 In order to protect the integrity of your call to Mobino, you will need to
 provide a computed signature. This signature is generated using a one way Hash
-function using the 'nonce' you provide and the 'API Secret' we provide to
+function using the +'nonce'+ you provide and the +'API Secret'+ we provide to
 you.
 
-Basically, you only have to concatenate your nonce and your 'API Secret',
-and calculate the MD5 hash.
+Basically, you only have to concatenate your +nonce+ and your +API Secret+,
+and then calculate the MD5 hash.
 
 .For example, your original parameters:
 -----
@@ -211,7 +215,7 @@ be able to select either JSON or URL encoding.
 
 
 
-Calling directly our APIs
+Call directly our APIs
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 It is of course possible to work without the mobino widget. You will need to
@@ -228,12 +232,13 @@ Call the URL +http://merchants.mobino.com/api/v1/tokens.json+ with the following
 |========
 | Parameter             | Description
 | +amount+              | the amount of the transaction (formatted with two decimal digits)
+| +currency+ (optional) | Optional Parameter: The currency used for the payment (if no currency
+is present, your default account currency will be used)
 | +api_key+             | your API key
 | +reference_number+    | a reference number for that will be passed back to your server
 | +transaction_type+    | the type of the transaction, either +regular+ or +gift+
 | +nonce+               | a random unique string that you send with your request
 | +signature+           | a signature over all above parameters as described in the section _Signature_
-| +callback+ (optional) | if this parameter is passed, the JSON response will be wrapped in a function call to allow cross domain JSONP requests.
 |========
 
 The response will be a JSON object with the following field:
@@ -241,7 +246,7 @@ The response will be a JSON object with the following field:
 [options="header"]
 |========
 | Field         | Description
-| +token+ (int) | the token
+| +token+       | the token
 |========
 
 
@@ -264,7 +269,6 @@ with the following parameters:
 | +api_key+             | your API key
 | +token+               | the token you retrieved in step 1
 | +lang+ (optional)     | the language that you want the text message to be in (can be either +en+, +fr+, +de+ or +it+ - defaults to +fr+)
-| +callback+ (optional) | if this parameter is passed, the JSON response will be wrapped in a function call to allow cross domain JSONP requests.
 |========
 
 The response will be a JSON object with the following fields:
@@ -295,7 +299,7 @@ A good time interval between two polls is 5 seconds.
 
 .Example
 ----
-GET /api/v1/transaction.json?api_key=YOUR_API_KEY&token=TOKEN
+GET /api/v1/transactions.json?api_key=YOUR_API_KEY&token=TOKEN
 
 {
   "message": "Your transaction is being processed. Please enter your PIN on the telephone.",
