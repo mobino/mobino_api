@@ -153,7 +153,7 @@ Mobino.serverUrl = 'https://staging.mobino.com/merchants';
   }
 });
 -----
-and your API secret is: '46ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r'.
+and your API secret is: 46ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r
 
 .So your signature will be hash_method([RANDOM_NONCE][YOUR_API_SECRET]):
 -----
@@ -208,10 +208,8 @@ At the moment, the parameters are returned url-encoded. In the future, you will
 be able to select either JSON or URL encoding.
 
 
-
-
 Calling directly our APIs
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 It is of course possible to work without the mobino widget. You will need to
 call our API directly. This is a two-step process. First, you need to generate
@@ -230,6 +228,7 @@ Call the URL +http://merchants.mobino.com/api/v1/tokens.json+ with the following
 | +api_key+             | your API key
 | +reference_number+    | a reference number for that will be passed back to your server
 | +transaction_type+    | the type of the transaction, either +regular+ or +gift+
+| +nonce+               | a random unique string that you send with your request
 | +signature+           | a signature over all above parameters as described in the section _Signature_
 | +callback+ (optional) | if this parameter is passed, the JSON response will be wrapped in a function call to allow cross domain JSONP requests.
 |========
@@ -245,7 +244,7 @@ The response will be a JSON object with the following field:
 
 .Example
 ----
-GET /api/v1/tokens.json?amount=2.50&api_key=YOUR_KEY&reference_number=79748&transaction_type=regular&signature=CALCULATED_SINATURE
+GET /api/v1/tokens.json?amount=2.50&api_key=YOUR_KEY&reference_number=79748&transaction_type=regular&nonce=184819-149&signature=CALCULATED_SINATURE
 
 {"token":12345}
 ----
@@ -282,7 +281,6 @@ A good time interval between two polls is 5 seconds.
 | Status         | Message
 | +initializing+ | Initializing...
 | +in_progress+  | Your transaction is being processed. Please enter your PIN on the telephone.
-| +wrong_pin     | You have entered the wrong PIN. Please try again.
 | +authorizing+  | Your transaction is being authorized.
 | +authorized+   | This transaction was successfully completed.
 | +expired+      | Transaction has expired. Please restart the payment process.
@@ -294,7 +292,7 @@ A good time interval between two polls is 5 seconds.
 
 .Example
 ----
-GET /api/v1/transaction.json?reference_number=79748&merchant_id=YOUR_MERCHANT_ID&token=TOKEN
+GET /api/v1/transaction.json?api_key=YOUR_API_KEY&token=TOKEN
 
 {
   "message": "Your transaction is being processed. Please enter your PIN on the telephone.",
