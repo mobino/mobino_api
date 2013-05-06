@@ -108,9 +108,7 @@ The Country code has to be in capitals. Currently supported:
   'FR' selects France.
   'DE' selects Germany.
 +callback+:: Optional Parameter: If passed a string the user will be redirected to this page
-when he successfully completed his transaction. If passed a function the function is called
-with +'success'+ when the transaction was successful and with +'failure'+ if the transaction
-was unsuccessful. *Note:* This is only there to improve the user experience and you need to
+when he successfully completed his transaction. *Note:* This is only there to improve the user experience and you need to
 use the server callback to verify the payment.
 +transaction+:: The transaction that should be started when the user clicks on the button.
 +transaction.amount+:: The amount to charge in Euro's and Cent's.
@@ -212,9 +210,6 @@ At the moment, the parameters are returned url-encoded. In the future, you will
 be able to select either JSON or URL encoding.
 
 
-
-
-
 Call directly our APIs
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -278,6 +273,8 @@ The response will be a JSON object with the following fields:
 | Field                    | Description
 | +message+ (string)       | a human readable message describing the next step
 | +status+ (string)        | the transaction status, for example +"in_progress"+, +"success"+, or +"failure"+. See below for compelete list
+| +amount+ (string)        | the amount you set for this transaction_type
+| +currency+ (string)      | the currency code
 |========
 
 If the +status+ is +"in_progress"+ you have to call the URL again until the transaction succeeded of failed.
