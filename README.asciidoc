@@ -56,7 +56,7 @@ button to appear:
       transaction: {
         amount: 10.00,
         api_key: 'YOUR_API_KEY',
-        reference_number: '70824',
+        reference_number: 'PO-70824',
         signature: 'CALCULATED_SIGNATURE'
       }
     });
@@ -78,7 +78,7 @@ button to appear:
         amount: 2.50,
         currency: 'EUR',
         api_key: 'YOUR_API_KEY',
-        reference_number: '79748',
+        reference_number: 'PO-79748',
         transaction_type: 'regular',
         signature: 'CALCULATED_SIGNATURE'
       }
@@ -121,6 +121,7 @@ a successful transaction.
 +transaction.transaction_type+:: Either +regular+ or +gift+. A regular transaction is one,
 where you bill your customer and get paid. A gift transaction is one where you
 provide some (virtual) gift to the customer (no money is being transfered)
++transaction.nonce+:: A random unique string that you send with your request
 +transaction.signature+:: A signature of the parameters. See section on 'Signature'
 
 
@@ -129,14 +130,14 @@ Signature
 
 In order to protect the integrity of your call to Mobino, you will need to
 provide a computed signature. This signature is generated using a one way Hash
-function using the 'reference number' you provide and the 'API Secret' we provide to
+function using the 'nonce' you provide and the 'API Secret' we provide to
 you.
 
-Basically, you only have to concatenate your reference number and your 'API Secret',
+Basically, you only have to concatenate your nonce and your 'API Secret',
 and calculate the MD5 hash.
 
-.For example, your original parameters and your API secret is:
-.'46ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r':
+For example, your original parameters and your API secret is:
+'46ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r':
 -----
 Mobino.serverUrl = 'https://staging.mobino.com/merchants';
  Mobino.createButton({
@@ -147,23 +148,24 @@ Mobino.serverUrl = 'https://staging.mobino.com/merchants';
     amount: 2.50,
     currency: 'EUR',
     api_key: 'YOUR_API_KEY',
-    reference_number: '70824',
+    reference_number: 'PO-70824',
+    nonce: '449127420-47481',
     transaction_type: 'regular'
   }
 });
 -----
 
-.So your signature will be:
+.So your signature will be hash_method([RANDOM_NONCE][YOUR_API_SECRET]):
 -----
 Ruby:
-Digest::MD5.hexdigest('7082446ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r')
-=> "f47e0842a97bc855627c1442a051322a"
+Digest::MD5.hexdigest('449127420-4748146ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r')
+=> "f5dda71d2afe3d4bed55c9b903f8c884"
 
 or
 
 PHP:
-hash('md5', '7082446ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r')
-=> "f47e0842a97bc855627c1442a051322a"
+hash('md5', '449127420-4748146ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r')
+=> "f5dda71d2afe3d4bed55c9b903f8c884"
 -----
 
 .This signature is then appended to the parameters:
@@ -177,16 +179,17 @@ Mobino.serverUrl = 'https://staging.mobino.com/merchants';
     amount: 2.50,
     currency: 'EUR',
     api_key: 'YOUR_API_KEY',
-    reference_number: '70824',
+    reference_number: 'PO-70824',
     transaction_type: 'regular',
-    signature: 'f47e0842a97bc855627c1442a051322a'
+    nonce: '449127420-47481',
+    signature: 'f5dda71d2afe3d4bed55c9b903f8c884'
   }
 });
 -----
 
 
 Callback URL
-------------
+~~~~~~~~~~~~
 
 You provide us with a callback URL in the admin interface and we will call you
 on the end of a transaction with the following information:
