@@ -208,6 +208,9 @@ At the moment, the parameters are returned url-encoded. In the future, you will
 be able to select either JSON or URL encoding.
 
 
+
+
+
 Calling directly our APIs
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -311,7 +314,7 @@ Call the URL +http://merchants.mobino.com/api/v1/preferred_phone_numbers.json+ w
 the following parameters:
 
 [options="header"]
-|=======
+|========
 | Parameter | Description
 | +ip+      | the ip address of the buyer
 | +lang+    | the default language preferred
@@ -321,10 +324,10 @@ This call returns a JSON object with the following fields
 
 [options="header"]
 |=======
-| Name             | Description
-| country          | the country that the buyer is in
-| preferred_number | Array with [country, language, phone_number]
-| other_numbers    | Array with all other possible phone numbers (in same format as preferred_number
+| Name               | Description
+| +country+          | the country that the buyer is in
+| +preferred_number+ | Array with [country, language, phone_number]
+| +other_numbers+    | Array with all other possible phone numbers (in same format as preferred_number
 |=======
 
 .Example
