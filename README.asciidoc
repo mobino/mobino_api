@@ -201,9 +201,11 @@ on the end of a transaction with the following information:
 successfully, and you will be credited the amount. If the transaction is
 unauthorized, then the customer didn't approve the transaction.
 +amount+:: The amount of the transaction (formatted with two decimal digits)
++currency+:: The currency code of the transaction
 +reference_number+:: The reference number you passed in when you generated the
 request for a transaction
 +api_key+:: your API key
++token+:: The token used to pay this transaction
 +signature+:: The signature for the above parameters
 
 At the moment, the parameters are returned url-encoded. In the future, you will
@@ -211,7 +213,7 @@ be able to select either JSON or URL encoding.
 
 
 Call directly our APIs
-~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------
 
 It is of course possible to work without the mobino widget. You will need to
 call our API directly. This is a two-step process. First, you need to generate
