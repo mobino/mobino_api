@@ -123,7 +123,7 @@ a successful transaction.
 +transaction.transaction_type+:: Optional Parameter: Either +regular+ or +gift+. A regular
 transaction is one, where you bill your customer and get paid. A gift transaction is one where
 you provide some (virtual) gift to the customer (no money is being transfered)
-+transaction.nonce+:: A random unique string that you send with your request
++transaction.nonce+:: A random unique string that you send with your request (you should always generate RANDOM nonce)
 +transaction.signature+:: A signature of the parameters. See section on 'Signature'
 
 
@@ -234,7 +234,7 @@ is present, your default account currency will be used)
 | +api_key+             | your API key
 | +reference_number+    | a reference number for that will be passed back to your server
 | +transaction_type+    | the type of the transaction, either +regular+ or +gift+
-| +nonce+               | a random unique string that you send with your request
+| +nonce+               | a random unique string that you send with your request (make sure you generate a RANDOM nonce)
 | +signature+           | a signature over all above parameters as described in the section _Signature_
 |========
 
@@ -305,6 +305,40 @@ GET /api/v1/transactions.json?api_key=YOUR_API_KEY&token=TOKEN
   "status": "in_progress"
 }
 ----
+
+Get your account information
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You can consult your account status and keep track of your latest transactions including both in and out payments.
+These API calls require also a +nonce+ and a signature calculated by yourself.
+
+To consult your account information, you can call the URL +/account+
+with the following parameters:
+
+[options="header"]
+|========
+| Parameter             | Description
+| +api_key+             | your API key
+| +nonce+               | a random unique string that you send with your request (make sure you generate a RANDOM nonce)
+| +signature+           | a signature over all above parameters as described in the section _Signature_
+|========
+
+The response will be a JSON array containing the number of transaction objects.
+
+Get your transaction list
+~~~~~~~~~~~~~~~~~~~~~~~~~
+To get all the recent transactions, you can call the URL +/transactions+
+with the following parameters:
+
+[options="header"]
+|========
+| Parameter             | Description
+| +api_key+             | your API key
+| +nonce+               | a random unique string that you send with your request (make sure you generate a RANDOM nonce)
+| +signature+           | a signature over all above parameters as described in the section _Signature_
+| +limit+ (Optional)    | the number of records you want to retrieve (if you don't precise, the default limit is 20)
+|========
+
+The response will be a JSON array containing the number of transaction objects.
 
 Optional: Return telephone number to call
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="md5.js"></script>
+  </head>
+  <body>
+    <h2>Your Transaction Histories</h2>
+    <div id="account_info"></div>
+    <table border="1" id="transaction_table">
+      <tr>
+        <th>UUID</th>
+        <th>AMOUNT</th>
+        <th>CURRENCY</th>
+        <th>DEBTOR</th>
+        <th>CREDITOR</th>
+        <th>DATE</th>
+      </tr>
+    </table>
+    <button id="button">Get transactions</button>
+
+    <script>
+      $(document).ready(function(){
+        function guid() {
+          var S4 = function() {
+            return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+          };
+          return (S4()+'-'+S4()+S4());
+        }
+
+        /*
+          for test purpose, we just use javascript to calculate signature
+          however, in real production, this signature should be calculated
+          at the server side (NEVER show the secret).
+        */
+        var secret = '46ixHhzoP/GS9YY7S9SyaOmCvWA+X1m08Ch+2fhy7hw=';
+        /* first nonce */
+        var nonce = guid();
+
+        var account_info = jQuery.ajax({
+          url: "http://localhost:4080/account",
+          data: {
+            api_key: 'bdf358e31db4d84b72f25a2f5f02110c',
+            nonce: nonce,
+            signature: MD5(nonce + secret)
+          },
+          dataType: 'jsonp'
+        });
+
+        account_info.done(function(account) {
+          $("#account_info").html(" Merchant Name: " + account.name +
+                                  " Balance: " + (account.balance_cents/100.0) + " " + account.balance_currency);
+        });
+
+        /* second nonce */
+        nonce = guid();
+
+        $("#button").click(function(){
+          $(this).fadeOut();
+
+          var trx_request = jQuery.ajax({
+            url: "http://localhost:4080/transactions",
+            data: {
+              api_key: 'bdf358e31db4d84b72f25a2f5f02110c',
+              nonce: nonce,
+              signature: MD5(nonce + secret)
+            },
+            dataType: 'jsonp'
+          });
+
+          trx_request.done(function(transactions) {
+            var i;
+            for(i = 0; i < transactions.length; i++) {
+              var debtor = '';
+              var creditor = '';
+              if(transactions[i].debtor_account) {
+                debtor = transactions[i].debtor_account.owner_name;
+              } else {
+                creditor = transactions[i].creditor_account.owner_name;
+              }
+
+              $("#transaction_table").append(
+                '<tr id=\"'+ transactions[i].id +'\">' +
+                  '<td>' + transactions[i].uuid + '</td>' +
+                  '<td>' + (transactions[i].amount_cents/100.0) + '</td>' +
+                  '<td>' + transactions[i].currency_code + '</td>' +
+                  '<td>' + debtor + '</td>' +
+                  '<td>' + creditor + '</td>' +
+                  '<td>' + transactions[i].updated_at + '</td>' +
+                '</tr>'
+              );
+            }
+          });
+
+        });
+      });
+    </script>
+  </body>
+</html>
