@@ -9,12 +9,12 @@
       <ul>
         <li>Product Name: Lindt Milk</li>
         <li>Description: Yummy</li>
-        <li>Price: 10.5 USD</li>
+        <li>Price: 1.5 USD</li>
       </ul>
 
       <div id="mobino">
         <p>Click here to pay with Mobino</p>
-        <script src="http://localhost:4080/api/v1/mobino.js"></script>
+        <script src="https://app.mobino.com/merchants/api/v1/mobino.js"></script>
         <script>
           function guid() {
             var S4 = function() {
@@ -31,13 +31,13 @@
           var secret = '46ixHhzoP/GS9YY7S9SyaOmCvWA+X1m08Ch+2fhy7hw=';
           var nonce = guid();
 
-          Mobino.serverUrl = 'http://localhost:4080';
+          Mobino.serverUrl = 'https://app.mobino.com/merchants';
           Mobino.createButton({
-            lang: 'fr',
+            lang: 'de',
             country: 'CH',
-            callback: 'http://jichengchen.com',
+            callback: 'http://mobino.com',
             transaction: {
-              amount: 10.5,
+              amount: 1.5,
               currency: 'USD',
               api_key: 'bdf358e31db4d84b72f25a2f5f02110c',
               reference_number: 371947,
