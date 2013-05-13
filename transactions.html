@@ -38,7 +38,7 @@
         var nonce = guid();
 
         var account_info = jQuery.ajax({
-          url: "https://app.mobino.com/merchants/account",
+          url: "https://app.mobino.com/merchants/api/v1/account",
           data: {
             api_key: 'bdf358e31db4d84b72f25a2f5f02110c',
             nonce: nonce,
@@ -59,7 +59,7 @@
           $(this).fadeOut();
 
           var trx_request = jQuery.ajax({
-            url: "https://app.mobino.com/merchants/transactions",
+            url: "https://app.mobino.com/merchants/api/v1/transaction_list",
             data: {
               api_key: 'bdf358e31db4d84b72f25a2f5f02110c',
               nonce: nonce,

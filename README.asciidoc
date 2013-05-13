@@ -49,9 +49,9 @@ button to appear:
 .Minimal sample invocation of Mobino Widget:
 ----
 <div id="mobino">
-  <script src="http://mobino.com/api/v1/mobino.js"></script>
+  <script src="https://app.mobino.com/merchants/api/v1/mobino.js"></script>
   <script>
-    Mobino.serverUrl = 'https://staging.mobino.com/merchants';
+    Mobino.serverUrl = 'https://app.mobino.com/merchants';
     Mobino.createButton({
       transaction: {
         amount: 10.00,
@@ -68,9 +68,9 @@ button to appear:
 .Full sample invocation of Mobino Widget:
 ----
 <div id="mobino">
-  <script src="http://mobino.com/api/v1/mobino.js"></script>
+  <script src="https://app.mobino.com/merchants/api/v1/mobino.js"></script>
   <script>
-    Mobino.serverUrl = 'https://staging.mobino.com/merchants';
+    Mobino.serverUrl = 'https://app.mobino.com/merchants';
      Mobino.createButton({
       lang: 'fr',
       country: 'CH',
@@ -92,7 +92,7 @@ button to appear:
 Be sure to set the +serverUrl+ on the Mobino object first. If you are using the
 staging / sandbox enviornment, the correct value is
 +https://staging.mobino.com/merchants+. The *production* environments has
-+http://live.mobino.com/merchants+.
++https://app.mobino.com/merchants+.
 
 The parameters are as follows:
 
@@ -208,6 +208,11 @@ request for a transaction
 +token+:: The token used to pay this transaction
 +signature+:: The signature for the above parameters
 
+This callback URL is different from the one mentioned in the widget, as the former
+one is a simple callback from the browser which aims to improve the user experience.
+This callback, however, is a server-side callback that will be triggered in our
+payment system.
+
 At the moment, the parameters are returned url-encoded. In the future, you will
 be able to select either JSON or URL encoding.
 
@@ -223,7 +228,7 @@ of the transaction.
 Step 1: Retrieve a token
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Call the URL +http://merchants.mobino.com/api/v1/tokens.json+ with the following parameters:
+Call the URL +https://app.mobino.com/merchants/api/v1/tokens.json+ with the following parameters:
 
 [options="header"]
 |========
@@ -311,7 +316,7 @@ Get your account information
 You can consult your account status and keep track of your latest transactions including both in and out payments.
 These API calls require also a +nonce+ and a signature calculated by yourself.
 
-To consult your account information, you can call the URL +/account+
+To consult your account information, you can call the URL +/api/v1/account+
 with the following parameters:
 
 [options="header"]
@@ -326,7 +331,7 @@ The response will be a JSON array containing the number of transaction objects.
 
 Get your transaction list
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-To get all the recent transactions, you can call the URL +/transactions+
+To get all the recent transactions, you can call the URL +/api/v1/transaction_list+
 with the following parameters:
 
 [options="header"]
@@ -347,7 +352,7 @@ In order to show the buyer the local telephone number for Mobino, you can ask
 Mobino for the preferred telephone number based on the buyers IP and an
 optional language:
 
-Call the URL +http://merchants.mobino.com/api/v1/preferred_phone_numbers.json+ with
+Call the URL +https://app.mobino.com/api/v1/preferred_phone_numbers.json+ with
 the following parameters:
 
 [options="header"]
