@@ -2,7 +2,7 @@
 <html>
   <head>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="md5.js"></script>
+    <script src="sha1.js"></script>
   </head>
   <body>
     <div>
@@ -42,7 +42,7 @@
               api_key: 'bdf358e31db4d84b72f25a2f5f02110c',
               reference_number: 371947,
               nonce: nonce,
-              signature: MD5(nonce + secret)
+              signature: Sha1.hash(nonce + secret)
             }
           });
         </script>

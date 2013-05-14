@@ -136,7 +136,7 @@ function using the +'nonce'+ you provide and the +'API Secret'+ we provide to
 you.
 
 Basically, you only have to concatenate your +nonce+ and your +API Secret+,
-and then calculate the MD5 hash.
+and then calculate the SHA1 hash.
 
 .For example, your original parameters:
 -----
@@ -160,14 +160,14 @@ and your API secret is: 46ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r
 .So your signature will be hash_method([RANDOM_NONCE][YOUR_API_SECRET]):
 -----
 Ruby:
-Digest::MD5.hexdigest('449127420-4748146ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r')
-=> "f5dda71d2afe3d4bed55c9b903f8c884"
+Digest::SHA1.hexdigest('449127420-4748146ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r')
+=> "9d6fee302a883a5af307d0002e2f4688ec7ed58d"
 
 or
 
 PHP:
-hash('md5', '449127420-4748146ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r')
-=> "f5dda71d2afe3d4bed55c9b903f8c884"
+sha1("449127420-4748146ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r")
+=> "9d6fee302a883a5af307d0002e2f4688ec7ed58d"
 -----
 
 .This signature is then appended to the parameters:
@@ -184,7 +184,7 @@ Mobino.serverUrl = 'https://staging.mobino.com/merchants';
     reference_number: 'PO-70824',
     transaction_type: 'regular',
     nonce: '449127420-47481',
-    signature: 'f5dda71d2afe3d4bed55c9b903f8c884'
+    signature: '9d6fee302a883a5af307d0002e2f4688ec7ed58d'
   }
 });
 -----
