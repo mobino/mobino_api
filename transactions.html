@@ -14,6 +14,10 @@
         <th>CURRENCY</th>
         <th>DEBTOR</th>
         <th>CREDITOR</th>
+        <th>SOURCE_AMOUNT</th>
+        <th>SOURCE_CURRENCY</th>
+        <th>DEST_AMOUNT</th>
+        <th>DEST_CURRENCY</th>
         <th>DATE</th>
       </tr>
     </table>
@@ -82,10 +86,14 @@
               $("#transaction_table").append(
                 '<tr id=\"'+ transactions[i].id +'\">' +
                   '<td>' + transactions[i].uuid + '</td>' +
-                  '<td>' + (transactions[i].amount_cents/100.0) + '</td>' +
+                  '<td>' + transactions[i].amount_cents/100.0 + '</td>' +
                   '<td>' + transactions[i].currency_code + '</td>' +
                   '<td>' + debtor + '</td>' +
                   '<td>' + creditor + '</td>' +
+                  '<td>' + transactions[i].source_amount_cents/100.0 + '</td>' +
+                  '<td>' + transactions[i].source_currency + '</td>' +
+                  '<td>' + transactions[i].dest_amount_cents/100.0 + '</td>' +
+                  '<td>' + transactions[i].dest_currency + '</td>' +
                   '<td>' + transactions[i].updated_at + '</td>' +
                 '</tr>'
               );
