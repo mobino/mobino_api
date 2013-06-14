@@ -193,8 +193,7 @@ Mobino.serverUrl = 'https://staging.mobino.com/merchants';
 Callback URL
 ~~~~~~~~~~~~
 
-You provide us with a callback URL in the admin interface and we will call you
-on the end of a transaction with the following information:
+We will call the callback URL you provided to us at the end of a transaction with the following information:
 
 +status+:: The status of the transaction. One of 'authorized' or
 'unauthorized'. If you receive 'authorized', the transaction was completed
@@ -206,15 +205,25 @@ unauthorized, then the customer didn't approve the transaction.
 request for a transaction
 +api_key+:: your API key
 +token+:: The token used to pay this transaction
-+signature+:: The signature for the above parameters
++signature+:: The signature for this callback
 
 This callback URL is different from the one mentioned in the widget, as the former
 one is a simple callback from the browser which aims to improve the user experience.
-This callback, however, is a server-side callback that will be triggered in our
+This callback, however, is a server-side +HTTP POST+ callback that will be triggered in our
 payment system.
+
+We support callback URLs with HTTP and HTTPS protocol, but HTTPS is strongly recommended.
 
 At the moment, the parameters are returned url-encoded. In the future, you will
 be able to select either JSON or URL encoding.
+
+Note: The procedure to calculate a signature in this callback is very similar, we will
+hash the concatenation of the +reference_number+ you provided and your +API Secret+.
+
+.Example
+--------
+sha1([YOUR_REFERENCE_NUMBER][YOUR_API_SECRET])
+--------
 
 
 Call directly our APIs
