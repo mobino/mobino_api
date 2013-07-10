@@ -50,11 +50,11 @@ button to appear:
 
 .Minimal sample invocation of Mobino Widget:
 ----
-<div id="mobino">
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script src="https://app.mobino.com/merchants/api/v1/mobino.js"></script>
-  <script>
-    Mobino.createButton('mobino_payment', {
+<div id="mobino_payment"></div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://app.mobino.com/merchants/api/v1/mobino.js"></script>
+<script>
+    Mobino.createButton('YOUR_DIV_ID', {
       api_key: 'YOUR_API_KEY',
       transaction: {
         amount: 9.99,
@@ -64,17 +64,16 @@ button to appear:
         signature: 'CALCULATED_SIGNATURE'
       }
     });
-  </script>
-</div>
+</script>
 ----
 
 .Full sample invocation of Mobino Widget:
 ----
-<div id="mobino">
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script src="https://app.mobino.com/merchants/api/v1/mobino.js"></script>
-  <script>
-     Mobino.createButton({
+<div id="mobino_payment"></div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://app.mobino.com/merchants/api/v1/mobino.js"></script>
+<script>
+    Mobino.createButton('mobino_payment', {
       lang: 'de',
       country: 'CH',
       callback: 'http://example.com/paymentCompleted.html',
@@ -87,8 +86,7 @@ button to appear:
         signature: 'CALCULATED_SIGNATURE'
       }
     });
-  </script>
-</div>
+</script>
 ----
 
 The parameters are as follows:
@@ -135,7 +133,7 @@ and then calculate the SHA1 hash.
 
 .For example, your original parameters:
 -----
- Mobino.createButton({
+ Mobino.createButton('YOUR_DIV_ID', {
   lang: 'fr',
   country: 'CH',
   callback: 'http://example.com/paymentCompleted.html',
@@ -165,8 +163,7 @@ sha1("449127420-4748146ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r")
 
 .This signature is then appended to the parameter +transaction+:
 -----
-Mobino.serverUrl = 'https://staging.mobino.com/merchants';
- Mobino.createButton({
+ Mobino.createButton('YOUR_DIV_ID', {
   lang: 'fr',
   country: 'CH',
   callback: 'http://example.com/paymentCompleted.html',
