@@ -42,6 +42,8 @@ Using the Mobino Widget
 
 The simplest way to use Mobino is by using the provided Mobino Widget.
 
+Check out our online demo: +https://app.mobino.com/merchants/widget_example.html+
+
 Mobino provides you with a JavaScript widget that you can embed on the page
 where a sale is being made. Here's the code you need to put where you want the
 button to appear:
@@ -49,15 +51,16 @@ button to appear:
 .Minimal sample invocation of Mobino Widget:
 ----
 <div id="mobino">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script src="https://app.mobino.com/merchants/api/v1/mobino.js"></script>
   <script>
-    Mobino.serverUrl = 'https://app.mobino.com/merchants';
-    Mobino.createButton({
+    Mobino.createButton('mobino_payment', {
+      api_key: 'YOUR_API_KEY',
       transaction: {
-        amount: 10.00,
-        api_key: 'YOUR_API_KEY',
-        reference_number: 'PO-70824',
-        nonce: '449127420-47481',
+        amount: 9.99,
+        currency: 'CHF',
+        reference_number: 'YOUR_REF_NUMBER',
+        nonce: nonce,
         signature: 'CALCULATED_SIGNATURE'
       }
     });
@@ -68,19 +71,18 @@ button to appear:
 .Full sample invocation of Mobino Widget:
 ----
 <div id="mobino">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script src="https://app.mobino.com/merchants/api/v1/mobino.js"></script>
   <script>
-    Mobino.serverUrl = 'https://app.mobino.com/merchants';
      Mobino.createButton({
-      lang: 'fr',
+      lang: 'de',
       country: 'CH',
       callback: 'http://example.com/paymentCompleted.html',
+      api_key: 'YOUR_API_KEY',
       transaction: {
         amount: 2.50,
-        currency: 'EUR',
-        api_key: 'YOUR_API_KEY',
+        currency: 'CHF',
         reference_number: 'PO-79748',
-        transaction_type: 'regular',
         nonce: '449127420-68853',
         signature: 'CALCULATED_SIGNATURE'
       }
@@ -88,11 +90,6 @@ button to appear:
   </script>
 </div>
 ----
-
-Be sure to set the +serverUrl+ on the Mobino object first. If you are using the
-staging / sandbox enviornment, the correct value is
-+https://staging.mobino.com/merchants+. The *production* environments has
-+https://app.mobino.com/merchants+.
 
 The parameters are as follows:
 
@@ -108,8 +105,8 @@ The Country code has to be in capitals. Currently supported:
   'FR' selects France.
   'DE' selects Germany.
 +callback+:: Optional Parameter: If passed a string the user will be redirected to this page
-when he successfully completed his transaction. *Note:* This is only there to improve the user experience and you need to
-use the server callback to verify the payment.
+when he successfully completed his transaction. *Note:* This is only there to improve the user
+experience and you need to use the server callback to verify the payment.
 +transaction+:: The transaction that should be started when the user clicks on the button.
 +transaction.amount+:: The amount to charge in Euro's and Cent's.
 Separator of Euros and Cents is a +.+ (dot), not a comma. No other formatting
@@ -120,11 +117,9 @@ is present, your default account currency will be used)
 +transaction.reference_number+:: An reference number that you can use to track
 the payment. We will provide you this reference number in the callback we do on
 a successful transaction.
-+transaction.transaction_type+:: Optional Parameter: Either +regular+ or +gift+. A regular
-transaction is one, where you bill your customer and get paid. A gift transaction is one where
-you provide some (virtual) gift to the customer (no money is being transfered)
-+transaction.nonce+:: A random unique string that you send with your request (you should always generate RANDOM nonce)
-+transaction.signature+:: A signature of the parameters. See section on 'Signature'
++transaction.nonce+:: A random unique string that you send with your request (you should always
+generate RANDOM nonce).
++transaction.signature+:: A signature of the parameters. See section on 'Signature'.
 
 
 Signature
@@ -140,18 +135,16 @@ and then calculate the SHA1 hash.
 
 .For example, your original parameters:
 -----
-Mobino.serverUrl = 'https://staging.mobino.com/merchants';
  Mobino.createButton({
   lang: 'fr',
   country: 'CH',
   callback: 'http://example.com/paymentCompleted.html',
+  api_key: 'YOUR_API_KEY',
   transaction: {
     amount: 2.50,
-    currency: 'EUR',
-    api_key: 'YOUR_API_KEY',
+    currency: 'CHF',
     reference_number: 'PO-70824',
-    nonce: '449127420-47481',
-    transaction_type: 'regular'
+    nonce: '449127420-47481'
   }
 });
 -----
@@ -170,19 +163,18 @@ sha1("449127420-4748146ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r")
 => "9d6fee302a883a5af307d0002e2f4688ec7ed58d"
 -----
 
-.This signature is then appended to the parameters:
+.This signature is then appended to the parameter +transaction+:
 -----
 Mobino.serverUrl = 'https://staging.mobino.com/merchants';
  Mobino.createButton({
   lang: 'fr',
   country: 'CH',
   callback: 'http://example.com/paymentCompleted.html',
+  api_key: 'YOUR_API_KEY',
   transaction: {
     amount: 2.50,
-    currency: 'EUR',
-    api_key: 'YOUR_API_KEY',
+    currency: 'CHF',
     reference_number: 'PO-70824',
-    transaction_type: 'regular',
     nonce: '449127420-47481',
     signature: '9d6fee302a883a5af307d0002e2f4688ec7ed58d'
   }
@@ -247,7 +239,6 @@ Call the URL +https://app.mobino.com/merchants/api/v1/tokens.json+ with the foll
 is present, your default account currency will be used)
 | +api_key+             | your API key
 | +reference_number+    | a reference number for that will be passed back to your server
-| +transaction_type+    | the type of the transaction, either +regular+ or +gift+
 | +nonce+               | a random unique string that you send with your request (make sure you generate a RANDOM nonce)
 | +signature+           | a signature over all above parameters as described in the section _Signature_
 |========
@@ -263,7 +254,7 @@ The response will be a JSON object with the following field:
 
 .Example
 ----
-GET /api/v1/tokens.json?amount=2.50&api_key=YOUR_KEY&reference_number=79748&transaction_type=regular&nonce=184819-149&signature=CALCULATED_SINATURE
+GET /api/v1/tokens.json?amount=2.50&api_key=YOUR_KEY&reference_number=79748&nonce=184819-149&signature=CALCULATED_SIGNATURE
 
 {"token":12345}
 ----
@@ -301,13 +292,9 @@ A good time interval between two polls is 5 seconds.
 | Status         | Message
 | +initializing+ | Initializing...
 | +in_progress+  | Your transaction is being processed. Please enter your PIN on the telephone.
-| +authorizing+  | Your transaction is being authorized.
-| +authorized+   | This transaction was successfully completed.
 | +expired+      | Transaction has expired. Please restart the payment process.
 | +failure+      | This transaction could not be completed.
-| +rejected+     | This transaction was rejected.
 | +success+      | "Payment received. Your reference number for this transaction is: %{reference_number}"
-| +unauthorized+ | This transaction could be not authorized.
 |===========
 
 .Example
@@ -353,6 +340,9 @@ with the following parameters:
 |========
 
 The response will be a JSON array containing the number of transaction objects.
+
+Of course, you can check out our online demo as well: +https://app.mobino.com/merchants/transaction_list_example.html+
+
 
 Optional: Return telephone number to call
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
