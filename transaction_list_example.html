@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mobino Transaction List Example</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Mobino transaction list example">
+    <meta name="keywords" content="Mobino, transaction, mobile, payment">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://app.mobino.com/merchants/javascripts/sha1.js"></script>
+  </head>
+  <body>
+    <h2>Your Transaction Histories</h2>
+    <div id="account_info"></div>
+    <table border="1" id="transaction_table">
+      <tr>
+        <th>UUID</th>
+        <th>AMOUNT</th>
+        <th>CURRENCY</th>
+        <th>DEBTOR</th>
+        <th>CREDITOR</th>
+        <th>SOURCE_AMOUNT</th>
+        <th>SOURCE_CURRENCY</th>
+        <th>DEST_AMOUNT</th>
+        <th>DEST_CURRENCY</th>
+        <th>DATE</th>
+      </tr>
+    </table>
+    <button id="button">Get transactions</button>
+
+    <script>
+      $(document).ready(function(){
+        function guid() {
+          var S4 = function() {
+            return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+          };
+          return (S4()+'-'+S4()+S4());
+        }
+
+        /*
+          for test purpose, we just use javascript to calculate signature
+          however, in real production, this signature should be calculated
+          at the server side (NEVER show the secret).
+        */
+        var secret = '7gXEUWLY/1FqPS87WVfIDEoE4++QWDAlqsjgeYXEQs0=';
+        /* first nonce */
+        var nonce = guid();
+
+        var account_info = jQuery.ajax({
+          url: "https://app.mobino.com/merchants/api/v1/account",
+          data: {
+            api_key: '12a873b4619c60f6e3fc5c7316b6dc65',
+            nonce: nonce,
+            signature: Sha1.hash(nonce + secret)
+          },
+          dataType: 'jsonp'
+        });
+
+        account_info.done(function(account) {
+          $("#account_info").html(" Merchant Name: " + account.name +
+                                  " Balance: " + (account.balance_cents/100.0) + " " + account.balance_currency);
+        });
+
+        /* second nonce */
+        nonce = guid();
+
+        $("#button").click(function(){
+          $(this).fadeOut();
+
+          var trx_request = jQuery.ajax({
+            url: "https://app.mobino.com/merchants/api/v1/transaction_list",
+            data: {
+              api_key: '12a873b4619c60f6e3fc5c7316b6dc65',
+              nonce: nonce,
+              signature: Sha1.hash(nonce + secret)
+            },
+            dataType: 'jsonp'
+          });
+
+          trx_request.done(function(transactions) {
+            var i;
+            for(i = 0; i < transactions.length; i++) {
+              var debtor = '';
+              var creditor = '';
+              if(transactions[i].debtor_account) {
+                debtor = transactions[i].debtor_account.owner_name;
+              } else {
+                creditor = transactions[i].creditor_account.owner_name;
+              }
+
+              $("#transaction_table").append(
+                '<tr id=\"'+ transactions[i].id +'\">' +
+                  '<td>' + transactions[i].uuid + '</td>' +
+                  '<td>' + transactions[i].amount_cents/100.0 + '</td>' +
+                  '<td>' + transactions[i].currency_code + '</td>' +
+                  '<td>' + debtor + '</td>' +
+                  '<td>' + creditor + '</td>' +
+                  '<td>' + transactions[i].source_amount_cents/100.0 + '</td>' +
+                  '<td>' + transactions[i].source_currency + '</td>' +
+                  '<td>' + transactions[i].dest_amount_cents/100.0 + '</td>' +
+                  '<td>' + transactions[i].dest_currency + '</td>' +
+                  '<td>' + transactions[i].updated_at + '</td>' +
+                '</tr>'
+              );
+            }
+          });
+
+        });
+      });
+    </script>
+  </body>
+</html>

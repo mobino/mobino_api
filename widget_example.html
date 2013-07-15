@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mobino Widget Example</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Mobino javascript widget example">
+    <meta name="keywords" content="Mobino, widget, mobile, payment">
+    <link rel="stylesheet" type="text/css" href="css/widget_example_style.css" media="all">
+    <link href="https://fonts.googleapis.com/css?family=Imprima|Roboto" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://app.mobino.com/merchants/api/v1/mobino.js"></script>
+    <script src="https://app.mobino.com/merchants/javascripts/sha1.js"></script>
+</head>
+<body>
+<div id="container">
+    <div id="nav_bar" class="nav_bar wrapper">
+        <a href="#">Home</a><span class="nav_arrow">&gt;</span><span class="active">Checkout</span>
+    </div>
+    <section class="wrapper">
+        <article>
+            <header><span class="h3">Please review your order</span></header>
+            <div class="content">
+                <table class="shop_table cart bordered" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th class="product_info">Product</th>
+                        <th class="product_quantity">Quantity</th>
+                        <th class="product_price">Unit Price</th>
+                        <th class="product_subtotal">Total Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="cart_item">
+                        <td class="product_info">
+                            <div class="product_thumbnail">
+                                <img width="200" height="200" src="images/product_1.png">
+                            </div>
+                            <div class="product_name">
+                                <a href="#"><span class="h4">A Swiss Chocolate</span></a>
+                                <div class="product_description">Humm yummy!</div>
+                            </div>
+                        </td>
+                        <td class="product_quantity">
+                            <input type="text" name="qty" readonly="true" value="2" size="4" title="Qty" class="qty text">
+                            <input type="submit" value="Update" class="qty-update dark">
+                        </td>
+                        <td class="product_price"><span>2.50 CHF</span></td>
+                        <td class="product_subtotal"><span>5.00 CHF</span></td>
+                    </tr>
+
+                    <tr class="cart_item">
+                        <td class="product_info">
+                            <div class="product_thumbnail">
+                                <img width="200" height="200" src="images/product_2.png">
+                            </div>
+                            <div class="product_name">
+                                <a href="#"><span class="h4">Some Random Wine</span></a>
+                                <div class="product_description">Vin à la table</div>
+                            </div>
+                        </td>
+                        <td class="product_quantity">
+                            <input type="text" name="qty" readonly="true" value="1" size="4" title="Qty" class="qty text">
+                            <input type="submit" value="Update" class="qty-update dark">
+                        </td>
+                        <td class="product_price"><span>4.99 CHF</span></td>
+                        <td class="product_subtotal"><span>4.99 CHF</span></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="payment_methods">
+                    <header><h3>Old-fashioned Payment Methods</h3></header>
+                    <ul class="payment_methods">
+                        <li>
+                            <div class="radio"><span><input type="radio" name="amex" class="old"></span></div>
+                            <img src="images/amex.png">
+                        </li>
+                        <li>
+                            <div class="radio"><span><input type="radio" name="visa" class="old"></span></div>
+                            <img src="images/visa.png">
+                        </li>
+                        <li>
+                            <div class="radio"><span><input type="radio" name="paypal" class="old"></span></div>
+                            <img src="images/paypal.png">
+                        </li>
+                    </ul>
+
+                    <header><h3>Mobile Payment Methods</h3></header>
+                    <ul class="payment_methods">
+                        <li>
+                            <div class="radio"><span><input type="radio" name="mobino"></span></div>
+                            <img src="images/mobino_button.png" width="100">
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="cart_totals">9.99 CHF</div>
+
+                <a href="#" class="button dark shadow float-r" id="checkout">Confirm Order</a>
+            </div>
+        </article>
+
+        <article class="payment_execution">
+            <div class="content">
+                <header><h4>Please click the button below to start Mobino payment process</h4></header>
+                <div id="mobino_payment"></div>
+                <p>(Don't worry, this is just a demo test. Money will be sent back to you :)</p>
+                <script>
+                    function guid() {
+                        var S4 = function() {
+                            return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+                        };
+                        return (S4()+'-'+S4()+S4());
+                    }
+
+                    $('.qty-update').click(function(){
+                        alert('It\'s just a demo, nothing will happen :)');
+                        return false;
+                    });
+
+                    $('input.old').click(function() {
+                        alert('Come on!');
+                        this.checked = false;
+                    });
+
+                    $('#checkout').click(function(){
+                        if($('input[name=mobino]:radio').is(':checked')) {
+                            $('.payment_execution').slideDown();
+                            $('html, body').animate({
+                                scrollTop: $("#mobino_payment").offset().top
+                            }, 2000);
+                        } else {
+                            alert('Please select a payment method.');
+                        }
+                        return false;
+                    });
+
+                    /******************************************************************
+                     *
+                     * Example of Mobino widget BEGIN
+                     *
+                     */
+
+                    /*
+                     * for testing purpose, we just use javascript to calculate signature
+                     * however, in real production, this signature should be calculated
+                     * at the server side (NEVER show the secret).
+                     */
+                    var secret = '7gXEUWLY/1FqPS87WVfIDEoE4++QWDAlqsjgeYXEQs0=';
+                    var nonce = guid();
+
+                    Mobino.createButton('mobino_payment', {
+                        lang: 'de',
+                        country: 'CH',
+                        api_key: '12a873b4619c60f6e3fc5c7316b6dc65',
+                        transaction: {
+                            amount: 9.99,
+                            currency: 'CHF',
+                            reference_number: guid(),
+                            nonce: nonce,
+                            signature: Sha1.hash(nonce + secret)
+                        }
+                    });
+
+                    /*
+                     *
+                     * Example of Mobino widget END
+                     *
+                     ******************************************************************/
+                </script>
+            </div>
+        </article>
+
+        <article><br><br><br></article>
+    </section>
+</div>
+</body>
+</html>
