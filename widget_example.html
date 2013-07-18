@@ -106,6 +106,11 @@
                 <div id="mobino_payment"></div>
                 <p>(Don't worry, this is just a demo test. Money will be sent back to you :)</p>
                 <script>
+                    /*
+                     * function to generate a random string
+                     * DO NOT use this for real production, nonce and signature should be generated at
+                     * the server side.
+                     */
                     function guid() {
                         var S4 = function() {
                             return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -144,11 +149,14 @@
                     /*
                      * for testing purpose, we just use javascript to calculate signature
                      * however, in real production, this signature should be calculated
-                     * at the server side (NEVER show the secret).
+                     * at the server side (NEVER show the secret in widget).
                      */
                     var secret = '7gXEUWLY/1FqPS87WVfIDEoE4++QWDAlqsjgeYXEQs0=';
                     var nonce = guid();
 
+                    /*
+                     * create a payment button on the div whose id is 'mobino_payment'
+                     */
                     Mobino.createButton('mobino_payment', {
                         lang: 'de',
                         country: 'CH',
@@ -156,8 +164,8 @@
                         transaction: {
                             amount: 9.99,
                             currency: 'CHF',
-                            reference_number: guid(),
-                            nonce: nonce,
+                            reference_number: guid(), // for sales tracking purpose
+                            nonce: nonce, // please make sure every nonce is unique
                             signature: Sha1.hash(nonce + secret)
                         }
                     });

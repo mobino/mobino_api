@@ -29,6 +29,11 @@
 
     <script>
       $(document).ready(function(){
+        /*
+         * function to generate a random string
+         * DO NOT use this for real production, nonce and signature should be generated at
+         * the server side.
+         */
         function guid() {
           var S4 = function() {
             return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -45,16 +50,22 @@
         /* first nonce */
         var nonce = guid();
 
+        /*
+         * call Mobino account API
+         */
         var account_info = jQuery.ajax({
           url: "https://app.mobino.com/merchants/api/v1/account",
           data: {
             api_key: '12a873b4619c60f6e3fc5c7316b6dc65',
-            nonce: nonce,
+            nonce: nonce, // must be unique
             signature: Sha1.hash(nonce + secret)
           },
-          dataType: 'jsonp'
+          dataType: 'jsonp' // must be jsonp
         });
 
+        /*
+         * append your account information to div
+         */
         account_info.done(function(account) {
           $("#account_info").html(" Merchant Name: " + account.name +
                                   " Balance: " + (account.balance_cents/100.0) + " " + account.balance_currency);
@@ -66,16 +77,22 @@
         $("#button").click(function(){
           $(this).fadeOut();
 
+          /*
+           * call Mobino transaction list API
+           */
           var trx_request = jQuery.ajax({
             url: "https://app.mobino.com/merchants/api/v1/transaction_list",
             data: {
               api_key: '12a873b4619c60f6e3fc5c7316b6dc65',
-              nonce: nonce,
+              nonce: nonce, // must be unique
               signature: Sha1.hash(nonce + secret)
             },
-            dataType: 'jsonp'
+            dataType: 'jsonp' // must be jsonp
           });
 
+          /*
+           * append your transactions to div
+           */
           trx_request.done(function(transactions) {
             var i;
             for(i = 0; i < transactions.length; i++) {
