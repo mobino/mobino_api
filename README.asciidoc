@@ -1,13 +1,21 @@
 Mobino API Documentation
 ========================
 
-
 What is Mobino
 --------------
+Enabling mobile payments for 5 billion people
+
+We believe that each citizen of the world should be able to effortlessly send and receive
+money with their phone, no matter where they live, which telco they use, whether they have
+a bank account, a credit card or just cash in their pocket, no matter how much they earn
+and what they buy.
 
 How do I get paid with Mobino
 -----------------------------
-
+Please contact us directly and we will create a merchant account for you, then you can start
+to integrate Mobino payment system into your own business by looking at our API documentation.
+If you have any question regarding the integration, please don't hesitate to contact us by this
+email address: +api@mobino.com+
 
 The API
 -------
