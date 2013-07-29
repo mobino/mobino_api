@@ -245,7 +245,7 @@ is present, your default account currency will be used)
 | +api_key+             | your API key
 | +reference_number+    | a reference number for that will be passed back to your server
 | +nonce+               | a random unique string that you send with your request (make sure you generate a RANDOM nonce)
-| +signature+           | a signature over all above parameters as described in the section _Signature_
+| +signature+           | a signature calculated like: sha1([YOUR_NONCE][YOUR_API_SECRET])
 |========
 
 The response will be a JSON object with the following field:
@@ -317,7 +317,7 @@ Get your account information
 You can consult your account status and keep track of your latest transactions including both in and out payments.
 These API calls require also a +nonce+ and a signature calculated by yourself.
 
-To consult your account information, you can call the URL +/api/v1/account+
+To consult your account information, you can call the URL +GET /api/v1/account+
 with the following parameters:
 
 [options="header"]
@@ -325,14 +325,14 @@ with the following parameters:
 | Parameter             | Description
 | +api_key+             | your API key
 | +nonce+               | a random unique string that you send with your request (make sure you generate a RANDOM nonce)
-| +signature+           | a signature over all above parameters as described in the section _Signature_
+| +signature+           | a signature calculated like: sha1([YOUR_NONCE][YOUR_API_SECRET])
 |========
 
 The response will be a JSON array containing the number of transaction objects.
 
 Get your transaction list
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-To get all the recent transactions, you can call the URL +/api/v1/transaction_list+
+To get all the recent transactions, you can call the URL +GET /api/v1/transaction_list+
 with the following parameters:
 
 [options="header"]
@@ -340,7 +340,7 @@ with the following parameters:
 | Parameter             | Description
 | +api_key+             | your API key
 | +nonce+               | a random unique string that you send with your request (make sure you generate a RANDOM nonce)
-| +signature+           | a signature over all above parameters as described in the section _Signature_
+| +signature+           | a signature calculated like: sha1([YOUR_NONCE][YOUR_API_SECRET])
 | +limit+ (Optional)    | the number of records you want to retrieve (if you don't precise, the default limit is 20)
 |========
 
@@ -348,6 +348,20 @@ The response will be a JSON array containing the number of transaction objects.
 
 Of course, you can check out our online demo as well: +https://app.mobino.com/merchants/transaction_list_example.html+
 
+Refund transactions
+~~~~~~~~~~~~~~~~~~~
+When a payment dispute occurs, you could choose to refund the transaction by calling this
+URL +POST /api/v1/transaction/TRX_UUID/refund+ (TRX_UUID is the unique id of the transaction)
+with the following parameters:
+
+[options="header"]
+|========
+| Parameter             | Description
+| +api_key+             | your API key
+| +signature+           | a signature calculated like: sha1([THE_TRX_UUID][YOUR_API_SECRET])
+|========
+
+The response will be a JSON array containing the new transaction created.
 
 Optional: Return telephone number to call
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
