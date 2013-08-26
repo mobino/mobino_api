@@ -67,8 +67,8 @@ button to appear:
       transaction: {
         amount: 9.99,
         currency: 'CHF',
-        reference_number: 'YOUR_REF_NUMBER',
-        nonce: nonce,
+        reference_number: 'YOUR_REF_NUMBER', // MUST be UNIQUE to identify your payment
+        nonce: nonce, // MUST be UNIQUE in order to differentiate every API call
         signature: 'CALCULATED_SIGNATURE'
       }
     });
@@ -120,11 +120,11 @@ is allowed (thousand separators etc.)
 +transaction.currency+:: Optional Parameter: The currency used for the payment (if no currency
 is present, your default account currency will be used)
 +transaction.api_key+:: The API key found discussed above.
-+transaction.reference_number+:: An reference number that you can use to track
++transaction.reference_number+:: An UNIQUE reference number that you can use to track
 the payment. We will provide you this reference number in the callback we do on
-a successful transaction.
+a successful transaction. (Only Alphanumeric characters, +-+, and +_+ are allowed)
 +transaction.nonce+:: A random unique string that you send with your request (you should always
-generate RANDOM nonce).
+generate UNIQUE RANDOM nonce, only Alphanumeric characters, +-+, and +_+ are allowed).
 +transaction.signature+:: A signature of the parameters. See section on 'Signature'.
 
 
@@ -133,8 +133,13 @@ Signature
 
 In order to protect the integrity of your call to Mobino, you will need to
 provide a computed signature. This signature is generated using a one way Hash
-function using the +'nonce'+ you provide and the +'API Secret'+ we provide to
+function using the UNIQUE +'nonce'+ you provide and the +'API Secret'+ we provide to
 you.
+
+-----
+Please make sure every nonce you use to sign the request is UNIQUE and RANDOM!
+(Only Alphanumeric characters, +-+, and +_+ are allowed)
+-----
 
 Basically, you only have to concatenate your +nonce+ and your +API Secret+,
 and then calculate the SHA1 hash.
@@ -156,7 +161,7 @@ and then calculate the SHA1 hash.
 -----
 and your API secret is: 46ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r
 
-.So your signature will be hash_method([RANDOM_NONCE][YOUR_API_SECRET]):
+.So your signature will be hash_method([UNIQUE_RANDOM_NONCE][YOUR_API_SECRET]):
 -----
 Ruby:
 Digest::SHA1.hexdigest('449127420-4748146ixHhzoP/GS9tYY7S9SyaOm\f2h=b1r')
@@ -243,8 +248,8 @@ Call the URL +https://app.mobino.com/merchants/api/v1/tokens.json+ with the foll
 | +currency+ (optional) | Optional Parameter: The currency used for the payment (if no currency
 is present, your default account currency will be used)
 | +api_key+             | your API key
-| +reference_number+    | a reference number for that will be passed back to your server
-| +nonce+               | a random unique string that you send with your request (make sure you generate a RANDOM nonce)
+| +reference_number+    | a reference number for that will be passed back to your server (Only Alphanumeric characters, +-+, and +_+ are allowed)
+| +nonce+               | a random unique string that you send with your request (make sure you generate a RANDOM nonce, only Alphanumeric characters, +-+, and +_+ are allowed)
 | +signature+           | a signature calculated like: sha1([YOUR_NONCE][YOUR_API_SECRET])
 |========
 
