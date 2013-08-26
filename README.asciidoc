@@ -122,9 +122,9 @@ is present, your default account currency will be used)
 +transaction.api_key+:: The API key found discussed above.
 +transaction.reference_number+:: An UNIQUE reference number that you can use to track
 the payment. We will provide you this reference number in the callback we do on
-a successful transaction. (Only Alphanumeric characters, +-+, and +_+ are allowed)
+a successful transaction. (Only Alphanumeric characters, "-", and "_" are allowed)
 +transaction.nonce+:: A random unique string that you send with your request (you should always
-generate UNIQUE RANDOM nonce, only Alphanumeric characters, +-+, and +_+ are allowed).
+generate UNIQUE RANDOM nonce, only Alphanumeric characters, "-", and "_" are allowed).
 +transaction.signature+:: A signature of the parameters. See section on 'Signature'.
 
 
@@ -138,7 +138,8 @@ you.
 
 -----
 Please make sure every nonce you use to sign the request is UNIQUE and RANDOM!
-(Only Alphanumeric characters, +-+, and +_+ are allowed)
+And the signing process should ALWAYS be done at the server side.
+(Only Alphanumeric characters, "-", and "_" are allowed)
 -----
 
 Basically, you only have to concatenate your +nonce+ and your +API Secret+,
@@ -248,8 +249,8 @@ Call the URL +https://app.mobino.com/merchants/api/v1/tokens.json+ with the foll
 | +currency+ (optional) | Optional Parameter: The currency used for the payment (if no currency
 is present, your default account currency will be used)
 | +api_key+             | your API key
-| +reference_number+    | a reference number for that will be passed back to your server (Only Alphanumeric characters, +-+, and +_+ are allowed)
-| +nonce+               | a random unique string that you send with your request (make sure you generate a RANDOM nonce, only Alphanumeric characters, +-+, and +_+ are allowed)
+| +reference_number+    | a reference number for that will be passed back to your server (Only Alphanumeric characters, "-", and "_" are allowed)
+| +nonce+               | a random unique string that you send with your request (make sure you generate a RANDOM nonce, only Alphanumeric characters, "-", and "_" are allowed)
 | +signature+           | a signature calculated like: sha1([YOUR_NONCE][YOUR_API_SECRET])
 |========
 
